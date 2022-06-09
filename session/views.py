@@ -45,7 +45,7 @@ def registration(request):
                 'domain': current_site.domain,
             })
             send_mail = form.cleaned_data.get('email')
-            email = EmailMessage(mail_subject, message, to=[send_mail])
+            email = EmailMessage(mail_subject, message, to=[send_mail,])
             email.send()
             messages.success(request, 'Succesfully created an account!')
             return redirect('/session/login')
