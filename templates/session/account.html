@@ -1,6 +1,11 @@
 {% autoescape off %}
-Hi {{ user.username }},
+Hi {{ user.get_full_name}},
 You have successfully created an account on:
 http://{{ domain }}
-If you think, it's not you, the just ignore this email.
+
+If you think, it's not you, then just ignore this email.
+
+Thanks and Best Regards
+Admin
+TuitionBD 
 {% endautoescape %}
