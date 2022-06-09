@@ -1,0 +1,27 @@
+{% extends 'basic.html' %}
+{% block title %}Add Photo{% endblock%}
+{% block body %}
+{% load crispy_forms_tags %}
+{% if user.is_authenticated %}
+    <div class="col-md-6 offset-md-3">
+        <legend class= "border-bottom text-center mb-4"><h2>Your Photo Gallery</h2></legend>
+        {% for image in images %}
+                <img src="{{image.image.url}}" height="120" width="120"/></td> 
+        {% endfor %}
+        <div class="float-right">
+        <form action="/tuition/addphoto/{{id}}/" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+                {{form|crispy}}
+            <button type="submit" class="btn btn-outline-info">Save</button>
+        </form>
+        </div>
+    </div>    
+{% endif %}
+
+
+{% endblock%}
+
+
+
+
+

@@ -1,0 +1,23 @@
+{% extends 'basic.html' %}
+{% block body %}
+<div class="container">
+<div class="col-md-6 offset-md-3 p-3 border">
+<form method="post">
+{% csrf_token %}
+<div style="text-align:center">  
+    Are you sure Delete this? <br>
+</div>
+
+<div class="text-center">
+    <form action="/tuition/confirmcommentdelete/{{commentid}}/{{postid}}/" method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn"><a href="/tuition/confirmcommentdelete/{{commentid}}/{{postid}}/">Yes</a></button>
+    </form>
+</div>
+
+</form>
+</div>
+</div>
+
+
+{% endblock body %}

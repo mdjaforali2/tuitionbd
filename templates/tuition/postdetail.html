@@ -1,0 +1,149 @@
+{% extends 'basic.html' %}
+{% block title %}Post Details{% endblock title %}
+{% block body %}
+{% load humanize %}
+{% load tag %}
+
+
+<div class="col-md-6 offset-md-3 p-3 border">
+    <h1 class="text-center"> P1{{object.id}} {{object.proper_title}}</h1> <br>
+    {% comment %} <div class="col-md-6 offset-md-3 p-3 border center"> {% endcomment %}
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <h2> {{msg}} </h2> 
+                Post created by: <b>{{object.user.username}}</b> <br>
+                Created at: {{object.created_at|naturaltime}} <br> 
+                Subjects interested in teaching: <b>{{object.get_subject_list}}</b><br>
+                Classes wishes to teach: <b>{{object.get_class_list}}</b> <br>
+                Category: <b>{{object.category}}</b> <br>
+                {% comment %} Language Known: {{object.medium}} <br> {% endcomment %}
+                Salary Expectation: <b>{{object.salary}}BDT</b> <br>
+                Availablity: {% if object.available %} <b>Yes</b> {% else %} No{% endif %}<br>
+                Contact: <b>{{object.email}}</b> <br>
+                District: <b>{{object.district}}</b> <br>
+            </div>
+            <div class="col">
+                <img src="{{object.image.url}}" alt="" style="width:300px, height:300px" class="rounded-circle img-thumbnail"> <br> 
+
+                 {% comment %} <div class="float-right">
+                <div class="fb-like" data-href="http://127.0.0.1:8000/tuition/postdetail/{{object.id}}/" data-width="" data-layout="box_count" data-action="recommend" data-size="large" data-share="true"></div>
+                 </div> {% endcomment %}
+            </div>
+        </div>
+            <p>Details: {{object.details}}</p>
+
+                {% comment %} <div class>
+                <div class="fb-comments" data-href="http://127.0.0.1:8000/tuition/postdetail/{{object.id}}/" data-width="" data-numposts="10"></div>
+                </div> {% endcomment %}
+    </div>
+        
+        {% if request.user != object.user %}
+            <div class="col text-center">
+                <button class="btn"> <a href="/tuition/apply/{{object.id}}/">Apply For This Tuition</a>
+            </div>
+        {% else %}
+            <div class="text-center">
+                <button class="btn"> <a href="/tuition/applicants/{{object.id}}/">See The Applicants Who Applied For This Tuition</a> </button>
+            </div>
+        {% endif %}
+    
+</div>
+<div class="col-md-6 offset-md-3 p-3 border">
+    <form action="/tuition/likepost/{{object.id}}/" method="post">
+    <div class="row">
+        <div class="col">
+            {% csrf_token %}
+            {% if liked %}
+                <button type="submit" class="btn btn-warning">Unlike</button>
+            {% else %}
+                <button type="submit" class="btn btn-primary">Like</button>
+            {% endif %} <br>
+            Total Likes: {{object.total_likes}} 
+        </div>
+
+        <div class="text-center">
+            {% if request.user == object.user %}
+                <a href="/tuition/addphoto/{{object.id}}/">Add Photo </a> 
+                <a href="/tuition/update/{{object.id}}/">Edit </a> 
+                <a href="/tuition/delete/{{object.id}}/">Delete </a>
+            {% endif %}
+            </div>
+
+        <div class="col">
+            <div class="float-right"> 
+            Total views: {{object.total_views}}
+            </div>
+        </div>
+    </div>
+    </form>
+</div>
+
+<div class="col-md-8 offset-md-2 p-3">
+    <form action="/tuition/addcomment/" method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label>Your Comment</label>
+            <input type="text" name="comment" placeholder="Enter Your Commnet" class="form-control">
+            <input type="hidden" name="postid" value="{{object.id}}">
+            <input type="hidden" name="parentid" value="">
+            <button type="submit" class="btn btn-primary">Add Comment</button>    
+        </div>
+    </form>
+
+    <div>
+        {% for comment in comments %}
+        <div class="row">
+            <div clas="col-md-1">
+                <img src="{{comment.user.userprofile.image.url}}" class="rounded-circle img-thumbnail" style="width:45px" alt="">
+            </div>   
+            <div class="col-md-10">  
+                <b><a href="/session/otherpro/{{comment.user.username}}/">{{comment.user.username}}</a></b> <span class="bedge bedge-secondary">{{comment.created_at|naturaltime}}</span>
+                <div>
+                    {{comment.text}}
+                    {% if comment.text%} <br>
+                        {% if request.user == comment.user%}
+                            <a href="/tuition/commentedit/{{comment.id}}/{{object.id}}/">Edit</a>
+                        {% endif %}
+                        {% if request.user == comment.user or object.user == request.user %}
+                            <a href="/tuition/commentdelete/{{comment.id}}/{{object.id}}/">Delete</a>
+                        {% endif %}
+                    {% endif %}
+                </div>
+                <div class="row">
+                    <form action="/tuition/addcomment/" method="post">
+                        {% csrf_token %}
+                            <div class="form-group">
+                                {% comment %} <label>Reply</label> {% endcomment %}
+                                <input type="text" name="comment" placeholder="Reply Here" class="form-control">
+                                <input type="hidden" name="postid" value="{{object.id}}">
+                                <input type="hidden" name="parentid" value="{{comment.id}}"> 
+                                <button type="submit" class="btn btn-secondary">Reply</button>
+                            </div>
+                                
+                    </form>
+                </div>
+                {% for reply in DictofReply|get_reply:comment.id%}
+                <div class="row">
+                    <div class="col-md-1">
+                        <img src="{{reply.user.userprofile.image.url}}" class="rounded-circle img-thumbnail" style="width:45px" alt="">
+                    </div>
+                    <div class="col-md-10">   
+                        <b><a href="/session/otherpro/{{reply.user.username}}/">{{reply.user.username}}</a></b> <span class="bedge bedge-secondary">{{reply.created_at|naturaltime}}</span>
+                        <div>    
+                        {{reply.text}}
+                        {% if reply.text%} <br>
+                            {% if request.user == reply.user%}
+                                <a href="/tuition/replyedit/{{reply.id}}/{{object.id}}/">Edit</a>
+                                <a href="/tuition/replydelete/{{reply.id}}/{{object.id}}/">Delete</a>
+                            {% endif %}
+                        {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %} 
+            </div>    
+        </div>
+        {% endfor %}       
+    </div>            
+{% endblock  %}

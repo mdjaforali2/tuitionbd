@@ -1,0 +1,48 @@
+{% extends 'basic.html' %}
+{% block title %}Applicants List{% endblock title %}
+{% block body %}
+{% load humanize %}
+
+<div class="col-md-9 offset-md-1 p-3 border">
+    <h3 class="text-center">Applicants List</h3>
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Gender</th>
+                <th scope="col">Location</th>
+                <th scope="col">Date of Birth</th>
+                <th scope="col">Salary Expectation</th>
+                <th scope="col">Days Per Week</th>
+                <th scope="col">Education</th>
+                <th scope="col">Phone</th>
+                <th scope="col">Status</th>
+
+            </tr>
+            </thead>
+            <tbody>
+                {% for a in applicants %}
+                <th scope="row"><a href="/session/otherpro/{{a.username}}/">{{a.get_full_name}}</a></th>
+                <td>{{a.userprofile.gender}}</td>
+                <td>{{a.tuitionprofile.district}}</td>
+                <td><span class="badge badge-secondary">{{a.userprofile.birth_date}}</span></td>
+                <td>{{a.tuitionprofile.salary}} </td>
+                <td>{{a.tuitionprofile.days_per_week}} </td>
+                <td><span class="badge badge-secondary">{{a.tuitionprofile.education}}</span></td>
+                <td>{{a.userprofile.phone}} </td>
+                <td><a href="">Pending</a> </td>
+            </tbody>
+            {% endfor %}
+        </table>
+</div>
+
+
+
+{% endblock body %}
+
+
+
+
+
+
+

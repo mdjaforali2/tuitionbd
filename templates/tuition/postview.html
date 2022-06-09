@@ -1,0 +1,14 @@
+{% extends 'basic.html' %}
+{% block body %}
+{% for p in post %}
+{{p.title}}
+
+{% comment %} <img src="{{p.image.url}}" alt=""> {% endcomment %}
+<img src="/media/{{p.image}}" alt="">
+
+<hr>
+{% endfor %}
+{% endblock body %}
+
+
+

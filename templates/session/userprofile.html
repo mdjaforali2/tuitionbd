@@ -1,0 +1,36 @@
+{% extends 'basic.html' %}
+{% block body %}
+<div class="container">
+<div class="row">
+<div class="col">
+<img src="{{user.userprofile.image.url}}" class="rounded-circle img-thumbnail" alt="">
+</div>
+<div class="col-md-6 offset-md-3 p-3 border">
+<div class="col">
+Name: {{user.first_name}} {{user.last_name}} <br>
+Gender: {{user.userprofile.gender}} <br>
+Date of Birth: {{user.userprofile.birth_date}} <br>
+Blood Group: {{user.userprofile.blood_group}} <br>
+Nationality: {{user.userprofile.nationality}} <br>
+Religion: {{user.userprofile.religion}} <br>
+Profession: {{user.userprofile.profession}} <br>
+Address: {{user.userprofile.address}} <br>
+Phone: {{user.userprofile.phone}} <br>
+</div>
+
+</div>
+</div>
+</div> <br> <br>
+{% comment %} <div class="text-center"> {% endcomment %}
+    {% comment %} <button class="btn">
+        <a href="/tuition/pdf/">Download All Contacts</a>
+    </button>
+</div> {% endcomment %}
+
+
+<div class="text-center">
+    <button class="btn"><a href="/session/tuitionpro/">Create Tuition Profile</a></button> <br>
+</div>
+
+
+{% endblock body %}

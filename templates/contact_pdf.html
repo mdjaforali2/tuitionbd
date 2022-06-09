@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Document</title>
+    <style>
+        body {
+            font-size: 14px;
+        }
+        tr.head td,
+        tr.foot td {
+            padding-top: 10px;
+            padding-bottom: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            background-color: white;
+        }
+        tr.footer td {
+            font-size: 14px;
+        }
+        tr.item td {
+            padding-top: 3px;
+            padding-bottom: 3px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <h3 style="text-align:center; color:green; font-size:18px;">Contacts</h3>
+        <table cellpadding="0" cellspacing="0">
+            <tr class="head">
+                <td>Name</td>
+                <td>Phone</td>
+                <td>Details</td>
+            </tr>
+            {% for item in contact %}
+            <tr class="item ">
+                <td>{{item.name}}</td>
+                <td>{{item.phone}}</td>
+                <td>{{item.content}}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        <h3 style="color:blue; text-align:center;font-size-16px;">TuitionBD</h3>
+        <p style="color:blue; text-align:center;font-size-12px;">Thanks for supporting us.</p>
+    </div>
+</body>
+</html>

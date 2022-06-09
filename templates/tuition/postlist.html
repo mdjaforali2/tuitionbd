@@ -1,0 +1,114 @@
+{% extends 'basic.html' %}
+{% block title %}Post List{% endblock title %}
+{% block body %}
+{% load humanize %}
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <div class="container float-left">
+                <h4 class="text-center">Posts List</h4>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th scope="col">PostID</th>
+                        <th scope="col">Title</th>
+                        <th scope="col">Location</th>
+                        <th scope="col">Salary</th>
+                        <th scope="col">Post Creator</th>
+                        <th scope="col">Created At</th>
+                        <th scope="col">Status</th>
+                        <th scope="col"></th>
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                        {% for p in object_list %}
+                        <th scope="row">P1{{p.id}}</th>
+                        <td><a href="/tuition/postdetail/{{p.id}}">{{p.title}}</a></td>
+                        <td>{{p.district}}</td>
+                        <td>{{p.salary}} </td>
+                        <td><a href="/session/otherpro/{{p.user.username}}/"> {% if p.user.get_full_name %}{{p.user.get_full_name}} {% else %}{{p.user.username}} {% endif %} </a></td>
+                        <td><span class="badge badge-secondary">{{p.created_at}}</span></td>
+                        <td>{% if p.available%}Hiring{% else %}{{p.avialable}}Hired{% endif %} </td>
+                        <td><a href="/tuition/postdetail/{{p.id}}">Details</a> </td>
+                    </tbody>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+
+
+        {% comment %} <div class="col"> {% endcomment %}
+            <div class="float-right">
+                <h4 class="text-center">Advance Search</h4>
+                <form action="/tuition/filter/" method="post">
+                {% csrf_token %}
+
+
+                    <div class="form-group" >
+                        <label class="input-group-append" for="inputGroupSelect02">District</label>
+                        <select class="custom-select" id="inputGroupSelect02" name="district">
+                        <option value=""></option>
+                        {% for i in districts %}
+                        <option value="{{i}}">{{i}}</option>
+                        {% endfor %}
+                        </select>
+                    </div>
+
+
+                    <div class="form-group" >
+                        <label class="input-group-append" for="inputGroupSelect02">Subjects</label>
+                        <select class="selectpicker" id="inputGroupSelect02" name="subject" multiple>
+                            {% for i in subjects %}
+                            <option selected value="{{i}}">{{i}}</option>
+                            {% endfor %}
+                            </select>
+                    </div>
+
+                    <div class="form-group" >
+                        <label class="input-group-append" for="inputGroupSelect02">Class</label>
+                        <select class="selectpicker" id="inputGroupSelect02" name="class_in" multiple>
+                            {% for i in classes %}
+                            <option selected value="{{i}}">{{i}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="exampleFormControlInput1">Salary From</label>
+                        <input type="number" class="form-control" id="exampleFormControlInput1" name="salary_from" placeholder="500">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="exampleFormControlInput1">Salary To</label>
+                        <input type="number" class="form-control" id="exampleFormControlInput1" name="salary_to" placeholder="10000">
+                    </div>
+
+                    {% comment %} <div class="checkbox" name="cls">
+                        {% for i in classes %}
+                        <label><input type="checkbox" name="cls" value="{{i}}">{{i}}</option>
+                        {% endfor %}
+                      </div> {% endcomment %}
+
+                    {% comment %} <div class="form-group form-check">
+                        <input class="form-check-input" type="checkbox" id="exampleCheck1" name="available">
+                        <label class="form-check-label" for="exampleCheck1">Availablity</label>
+                        </div> {% endcomment %}
+
+                    <div class="text-center">
+                    <button type="submit" class="btn btn-primary mb-2">Filter</button>
+                    </div>
+
+                </form>
+                </div>
+            </div>
+        {% comment %} </div>  {% endcomment %}
+    </div>
+</div>
+{% endblock body %}
+
+
+
+

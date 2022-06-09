@@ -1,0 +1,17 @@
+{% extends 'basic.html' %}
+{% block body %}
+{% load notifications_tags %}
+<div class="container">
+    {% notifications_unread as unread_count %}
+        {% if unread_count %}
+            You have <b>{% live_notify_badge %}</b> unread notifications.
+            {% live_notify_list %}
+            {{ live_notify_list | safe }}
+        {% endif %}
+        <h1> Your all notifications: </h1> <br>
+        {% for i in user.notifications.unread %}
+            {{ i | safe}} <br>
+        {% endfor %}
+
+</div>
+{% endblock  %}

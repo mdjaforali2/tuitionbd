@@ -1,0 +1,20 @@
+{% extends 'basic.html' %}
+{% block body %}
+<div class="container">
+<div class="col-md-6 offset-md-3 p-3 border">
+<form method="post">
+{% csrf_token %}
+<div style="text-align:center">  
+    Are you sure Delete this post? <br>
+</div>
+
+<div style="text-align:center">  
+    <button type="submit" align="center">Yes</button> 
+</div>
+
+</form>
+</div>
+</div>
+
+
+{% endblock body %}
