@@ -39,9 +39,15 @@
     </div>
         
         {% if request.user != object.user %}
-            <div class="col text-center">
-                <button class="btn"> <a href="/tuition/apply/{{object.id}}/">Apply For This Tuition</a>
-            </div>
+            {% if request.user in applied_applicants %}
+                <div class="col text-center">
+                    <button class="btn"> You have already Applied for this Tuition</a>
+                </div>
+            {% else %}
+                <div class="col text-center">
+                    <button class="btn"> <a href="/tuition/apply/{{object.id}}/">Apply For This Tuition</a>
+                </div>     
+            {% endif %}
         {% else %}
             <div class="text-center">
                 <button class="btn"> <a href="/tuition/applicants/{{object.id}}/">See The Applicants Who Applied For This Tuition</a> </button>

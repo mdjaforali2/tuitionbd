@@ -217,6 +217,8 @@ class PostDetailView(DetailView):
                 DictofReply[reply.parent.id] = [reply]
             else:
                 DictofReply[reply.parent.id].append(reply)
+        applied_applicants = post.applicants.all()
+        context['applied_applicants'] = applied_applicants
         context['liked'] = liked
         context['comments'] = comments
         context['DictofReply'] = DictofReply
@@ -244,13 +246,13 @@ class PostDeleteView(DeleteView):
 def search(request):
     query = request.POST.get('search', '')
     if query:
-        queryset = (Q(title__icontains=query)) |  (Q(details__icontains=query)) | (Q(medium__icontains=query)) |  (Q(category__icontains=query)) | (Q(subject__name__icontains=query)) | (Q(class_in__name__icontains=query)) | (Q(user__username__icontains=query))
+        queryset = (Q(title__icontains=query)) |  (Q(details__icontains=query)) | (Q(medium__icontains=query)) | (Q(category__icontains=query)) | (Q(subject__name__icontains=query)) | (Q(class_in__name__icontains=query)) | (Q(user__username__icontains=query))
         results = Post.objects.filter(queryset).distinct()
     else:
         results = []
 
     context = {
-        'results' : results
+        'object_list' : results
     }
     context['subjects'] = Subject.objects.all()
     context['classes'] = Class_in.objects.all()
@@ -400,10 +402,7 @@ def apply(request,id):
         post.save()
         notify.send(request.user, recipient=post.user, verb="has applied to for your tuition " + f'''<a href="/session/otherpro/{request.user.username}/">See Profile</a>''')
         messages.success(request, 'You have successfully applied for this tuition')
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-    else:
-        messages.warning(request, 'You cannot apply for your own post.')
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        return redirect(f"/tuition/postdetail/{id}/")
 
 def applicants(request, id):
     post = Post.objects.get(id=id)
