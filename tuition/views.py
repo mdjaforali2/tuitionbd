@@ -404,6 +404,17 @@ def apply(request,id):
         messages.success(request, 'You have successfully applied for this tuition')
         return redirect(f"/tuition/postdetail/{id}/")
 
+
+def cancel(request,id):
+    post = Post.objects.get(id=id)
+    if request.user != post.user:
+        post.applicants.remove(request.user)
+        post.save()
+        notify.send(request.user, recipient=post.user, verb="has applied to for your tuition " + f'''<a href="/session/otherpro/{request.user.username}/">See Profile</a>''')
+        messages.warning(request, 'Your application has been canceled')
+        return redirect(f"/tuition/postdetail/{id}/")
+    
+
 def applicants(request, id):
     post = Post.objects.get(id=id)
     applicants = post.applicants.all()

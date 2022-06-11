@@ -24,7 +24,7 @@
                     </thead>
                     <tbody>
                         {% for p in object_list %}
-                        <th scope="row">P1{{p.id}}</th>
+                        <th scope="row">{% if request.user.is_authenticated %}<a href="/tuition/postdetail/{{p.id}}">P1{{p.id}}</a>{% endif %}</th>
                         <td>{{p.title}}</td>
                         <td>{{p.district}}</td>
                         <td>{{p.salary}} </td>

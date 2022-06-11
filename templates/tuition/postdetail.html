@@ -41,7 +41,7 @@
         {% if request.user != object.user %}
             {% if request.user in applied_applicants %}
                 <div class="col text-center">
-                    <button class="btn"> You have already Applied for this Tuition</a>
+                    <button class="btn"> <a href="/tuition/cancel/{{object.id}}/">Cancel My Application</a>
                 </div>
             {% else %}
                 <div class="col text-center">
