@@ -1,36 +1,62 @@
 {% extends 'basic.html' %}
 {% block body %}
+
 <div class="container">
-<div class="row">
-<div class="col">
-<img src="{{user.userprofile.image.url}}" class="rounded-circle img-thumbnail" alt="">
-</div>
-<div class="col-md-6 offset-md-3 p-3 border">
-<div class="col">
-Name: {{user.first_name}} {{user.last_name}} <br>
-Gender: {{user.userprofile.gender}} <br>
-Date of Birth: {{user.userprofile.birth_date}} <br>
-Blood Group: {{user.userprofile.blood_group}} <br>
-Nationality: {{user.userprofile.nationality}} <br>
-Religion: {{user.userprofile.religion}} <br>
-Profession: {{user.userprofile.profession}} <br>
-Address: {{user.userprofile.address}} <br>
-Phone: {{user.userprofile.phone}} <br>
+    <div class="text-center">
+        <img src="{{user.userprofile.image.url}}" class="rounded-circle img-thumbnail" alt="">
+    </div>
+    <br>
+    <div class="text-center">
+       <h4> <b>{{user.first_name}} {{user.last_name}}</b> </h4>
+    </div>
 </div>
 
+<div class="container">
+    <div class="row">
+        {% if user.userprofile %}
+        <div class="col">
+            <div class="col-md-12 offset-md- p-3 border">
+              <div class="text-center">
+                  <h3 class="border-bottom"> <legend> Basic Info </legend></h3>
+                  Gender: {{user.userprofile.gender}} <br>
+                  Date of Birth: {{user.userprofile.birth_date}} <br>
+                  Blood Group: {{user.userprofile.blood_group}} <br>
+                  Nationality: {{user.userprofile.nationality}} <br>
+                  Religion: {{user.userprofile.religion}} <br>
+                  Profession: {{user.userprofile.profession}} <br>
+                  Address: {{user.userprofile.address}}, {{user.tuitionprofile.district}} <br>
+                  Phone: {{user.userprofile.phone}} <br>
+                  Email: {{user.email}}
+              </div>
+            </div>
+        </div>
+        {% endif %}
+
+
+        {% if user.tuitionprofile %}
+        <div class="col">
+            <div class="col-md-12 offset-md- p-3 border">
+              <div class="text-center">
+                <h3 class="border-bottom"> <legend> Tution Related Info </legend></h3>
+                Style: {{user.tuitionprofile.style}} <br>
+                Place: {{user.tuitionprofile.place}} <br>
+                Approach: {{user.tuitionprofile.approach}} <br>
+                Approach: {{user.tuitionprofile.medium}} <br>
+                Subjects: {% for s in user.tuitionprofile.subject.all %} {{s}}
+                          {% comment %} {% if not forloop.last %},{% endif %} {% endcomment %}
+                          {% endfor %} <br>
+                Class In: {% for s in user.tuitionprofile.class_in.all %} {{s}}
+                          {% comment %} {% if not forloop.last %},{% endif %} {% endcomment %}
+                          {% endfor %} <br>
+                Salary: {{user.tuitionprofile.salary}} <br>
+                Days Per Week: {{user.tuitionprofile.days_per_week}} <br>
+                Education: {{user.tuitionprofile.education}} <br>
+                Status: {{user.tuitionprofile.status}} <br>
+            </div>
+          </div>
+        </div>
+        {% endif %} 
+    </div>
 </div>
-</div>
-</div> <br> <br>
-{% comment %} <div class="text-center"> {% endcomment %}
-    {% comment %} <button class="btn">
-        <a href="/tuition/pdf/">Download All Contacts</a>
-    </button>
-</div> {% endcomment %}
-
-
-<div class="text-center">
-    <button class="btn"><a href="/session/tuitionpro/">Create Tuition Profile</a></button> <br>
-</div>
-
-
+    
 {% endblock body %}
