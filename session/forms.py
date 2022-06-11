@@ -21,6 +21,7 @@ class UserProfileForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(UserProfileForm,self).__init__(*args, **kwargs)
         self.fields['phone'].initial = '+880'
+        self.fields['role'].label = 'My role here:'
 
 from .models import TuitionProfile
 

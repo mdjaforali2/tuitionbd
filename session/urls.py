@@ -1,5 +1,5 @@
 from django.urls import path, include
-from .views import loginuser, otherprofile, tuitionprofile, ownerprofile, logoutuser, notification, registration, change_pass, UserProfile, userProfile
+from .views import loginuser, userpost, userapply, otherprofile, tuitionprofile, ownerprofile, logoutuser, notification, registration, change_pass, UserProfile, userProfile
 
 app_name = 'session'
 
@@ -13,4 +13,7 @@ urlpatterns = [
     path('notification/', notification, name='notification'),
     path('ownerprofile/', ownerprofile, name='ownerprofile'),
     path('tuitionpro/', tuitionprofile, name='tuitionpro'),
+    path('userpost/', userpost, name='userpost'),
+    path('userapply/', userapply, name='userapply'),
+
 ]

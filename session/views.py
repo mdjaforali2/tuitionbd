@@ -8,6 +8,7 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
 from .models import UserProfile
+from tuition.models import Post 
 
 # Create your views here.
 def loginuser(request):
@@ -79,7 +80,7 @@ def userProfile(request):
             obj.user = request.user
             obj.save()
             messages.success(request, 'Successfully Saved Your Profile')
-            return redirect('homeview')
+            return redirect('/session/ownerprofile/')
     else:
         form = UserProfileForm(instance=instance)
 
@@ -134,3 +135,19 @@ def tuitionprofile(request):
         'form' : form,
     }
     return render(request, 'session/tuitionProfileCreate.html', context)
+
+
+def userpost(request):
+    results = Post.objects.filter(user=request.user)
+    context = {
+    'object_list' : results,
+    }
+    return render(request, 'tuition/mypostlist.html', context)
+
+
+def userapply(request):
+    results = Post.objects.filter(applicants=request.user)
+    context = {
+    'object_list' : results,
+    }
+    return render(request, 'tuition/applylist.html', context)

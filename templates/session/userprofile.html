@@ -2,12 +2,45 @@
 {% block body %}
 
 <div class="container">
-    <div class="text-center">
-        <img src="{{user.userprofile.image.url}}" class="rounded-circle img-thumbnail" alt="">
-    </div>
-    <br>
-    <div class="text-center">
-       <h4> <b>{{user.first_name}} {{user.last_name}}</b> </h4>
+    <div class="row">
+        <div class="col">
+            <div class="text-center">
+                <img src="{{user.userprofile.image.url}}" class="rounded-circle img-thumbnail" alt="">
+            </div>
+            <br>
+
+            <div class="text-center">
+            <h4> <b>{{user.first_name}} {{user.last_name}}</b> </h4>
+            </div>
+        </div>
+        
+        <div class="col">
+            <br> <br> 
+            <div class='text-center'>
+                <button type="submit" class="btn btn-link">
+                    <a href="/session/userpost/">My Posts</a>
+                </button>
+            </div>
+            
+            <div class='text-center'>
+                <button type="submit" class="btn btn-link">
+                    <a href="/session/userapply/">My Applications</a>
+                </button>
+            </div>
+
+            {% if user.tuitionprofile %}
+            <div class='text-center'>
+                <button type="submit" class="btn btn-link">
+                    <a href="/session/tuitionpro/">Update Tuition Profile</a>
+                </button>
+            </div>
+            {% else %}
+            <div class='text-center'>
+                <button type="submit" class="btn btn-link">
+                    <a href="/session/tuitionpro/">Create Tuition Profile</a>
+                </button>
+            </div>
+            {% endif %}
     </div>
 </div>
 
@@ -23,10 +56,10 @@
                   Blood Group: {{user.userprofile.blood_group}} <br>
                   Nationality: {{user.userprofile.nationality}} <br>
                   Religion: {{user.userprofile.religion}} <br>
-                  Profession: {{user.userprofile.profession}} <br>
+                  Role: {{user.userprofile.role}} <br>
                   Address: {{user.userprofile.address}}, {{user.tuitionprofile.district}} <br>
                   Phone: {{user.userprofile.phone}} <br>
-                  Email: {{user.email}}
+                  Email: {{user.email_address}}
               </div>
             </div>
         </div>
@@ -58,5 +91,8 @@
         {% endif %} 
     </div>
 </div>
+<br>
+
+
     
 {% endblock body %}

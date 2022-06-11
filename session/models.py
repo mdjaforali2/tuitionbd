@@ -20,7 +20,7 @@ class UserProfile(models.Model):
     )
 
     CATEGORY = (
-        ('Student', 'Student'),
+        ('Student', 'Guardian/Student'),
         ('Teacher', 'Teacher'),
     )
 
@@ -45,7 +45,7 @@ class UserProfile(models.Model):
     nationality = models.CharField(max_length=30)
     religion = models.CharField(max_length=50)
     biodata = models.TextField()
-    profession = models.CharField(max_length=50, choices=CATEGORY, null=True)
+    role = models.CharField(max_length=50, choices=CATEGORY, null=True)
     image = models.ImageField(default='default.png', upload_to='session/images/')
 
     def __str__(self):

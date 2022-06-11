@@ -23,10 +23,10 @@
                   Blood Group: {{user.userprofile.blood_group}} <br>
                   Nationality: {{user.userprofile.nationality}} <br>
                   Religion: {{user.userprofile.religion}} <br>
-                  Profession: {{user.userprofile.profession}} <br>
+                  Role: {{user.userprofile.role}} <br>
                   Address: {{user.userprofile.address}}, {{user.tuitionprofile.district}} <br>
                   Phone: {{user.userprofile.phone}} <br>
-                  Email: {{user.email}}
+                  Email: {{user.email_address}}
               </div>
             </div>
         </div>
@@ -58,5 +58,6 @@
         {% endif %} 
     </div>
 </div>
-    
+<br>
+
 {% endblock body %}
