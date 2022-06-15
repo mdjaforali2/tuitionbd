@@ -2,26 +2,24 @@
 {% block body %}
 {% load crispy_forms_tags %}
 
-<div class="container">
-<div class=".col-md-6.offset-md-3">
+<div class="container p-4">
+      <h2 class="font-weight-bold mt-3">Contact Us</h2>
+      <hr>
+      <form method="post">
+      {% csrf_token %}
+      {% comment %} {% for field  in form %}
+      {{field.errors}}
+      {% comment %} {{field.label_tag}} {% endcomment %}
+      {% comment %} {{field|as_crispy_field}}
+      {{field.help_text}}
+      {% endfor %} {% endcomment %} 
 
-<h2 class="text-center">Contact Information</h2>
+      {{form|crispy}}
+      <div class="text-center">
+            <button type="submit" class="btn btn-primary">Submit</button>
+      </div>
+</div>
 
-<div class="container">
-<form method="post">
-{% csrf_token %}
-{% comment %} {% for field  in form %}
-{{field.errors}}
-{% comment %} {{field.label_tag}} {% endcomment %}
-{% comment %} {{field|as_crispy_field}}
-{{field.help_text}}
-{% endfor %} {% endcomment %} 
-
-{{form|crispy}}
-       <button type="submit" class="btn btn-primary">Submit</button>
-      </form>
-</div>
-</div>
-</div>
+<br> <br>
 {% endblock body %}
 
