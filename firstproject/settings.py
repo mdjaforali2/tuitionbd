@@ -152,4 +152,4 @@ EMAIL_HOST_USER = 'tuitionbd232@gmail.com'
 EMAIL_HOST_PASSWORD = 'hkckmoeqkzxjzfed'
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
-DEFAULT_FROM_EMAIL = 'JFS Team <tuitionbd232@gmail.com'
+DEFAULT_FROM_EMAIL = 'TuitionBD ADdmin Team <tuitionbd232@gmail.com>'
