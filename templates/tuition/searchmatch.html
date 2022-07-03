@@ -1,7 +1,7 @@
 {% autoescape off %}
-Hi {{user}},
+Hi {{user.first_name}} {{user.last_name}},
 This is to inform you that there has been a post created that matches your profile. For more details follow the link below:
-http://127.0.0.1:8000/tuition/postdetail/{{id}}/
+http://{{domain}}/tuition/postdetail/{{id}}/
 
 If you think, it's not you, then just ignore this email.
 

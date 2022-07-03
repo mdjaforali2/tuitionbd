@@ -4,8 +4,10 @@
 
 
 <div class="container p-4">
-    <h2 class="font-weight-bold mt-3">TuitionBD SignUp</h2>
-    <hr>
+    <div class="text-center">
+        <h2 class="font-weight-bold mt-3">TuitionBD SignUp</h2>
+        <hr>
+    </div>
     <form method="post" action="">
         {% csrf_token %}
         {{form|crispy}}

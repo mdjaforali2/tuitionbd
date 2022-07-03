@@ -40,7 +40,7 @@
               <a class="nav-link" href="/tuition/contact/">Contact</a>
             </li>
             <li class="nav-item">
-              {% if user.is_authenticated %}
+              {% if user.email == 'tuitionbd232@gmail.com' %}
                   <a class="nav-link" href="/admin">Admin</a>
               {% endif %}
             </li>
@@ -51,8 +51,8 @@
               {% register_notify_callbacks callbacks='fill_notification_list, fill_notification_badge, my_special_notification_callback' %}
                 <a class="nav-link" href="/session/notification/">Notifications(<b>{% live_notify_badge %}</b>)</a>
                 {% endif %}
-              </li>
-
+              </li>  
+            
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 Post
@@ -84,9 +84,9 @@
               <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                 {% if user.userprofile.DoesNotExist%}
                 <a class="dropdown-item" href="/session/ownerprofile/">Profile</a>
-                <a class="dropdown-item" href="/session/userpro/">Update Profile</a>
+                {% comment %} <a class="dropdown-item" href="/session/userproupdate/{{user.userprofile.id}}/">Update Profile</a> {% endcomment %}
                 {% else %}
-                <a class="dropdown-item" href="/session/userpro/">Create Profile</a>
+                <a class="dropdown-item" href="/session/userprocreate/">Create Profile</a>
                 {% endif %}
                <a class="dropdown-item" href="/session/password/">Change Password</a>
                 <a class="dropdown-item" href="/session/logout">Logout</a>
@@ -127,32 +127,10 @@
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-47692315-56"></script>
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script> 
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.3/dist/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script> 
 
-
-
-
-    
-
-
-
-
-      	
-
-  
-
-
-
-
-
-
-
-  </body>
-  
-    
-    
   </body>
   {% block js %}
   {% endblock js %}

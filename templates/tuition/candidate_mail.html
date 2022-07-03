@@ -1,0 +1,16 @@
+{% autoescape off %}
+Congratulations! {{candidate.user.first_name}} {{candidate.user.last_name}},
+
+We are pleased to infrom you that you have been selected for a tuition of {{post.salary}}BDT, starting from: {{post.starting_from}} located at: {{post.address}}, {{post.upazilla}}, {{post.district}}.
+
+Below is a link to check the conditions and make your decission. We encourage you to decide within 7 days from this email.
+http://{{domain}}/tuition/postdetail/{{id}}/
+
+Thanks for supporting us. 
+
+If you think, it's not you, then just ignore this email.
+
+Thanks and Best Regards
+Admin
+TuitionBD 
+{% endautoescape %}

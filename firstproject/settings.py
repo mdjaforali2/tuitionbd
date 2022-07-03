@@ -45,7 +45,8 @@ INSTALLED_APPS = [
     'crispy_forms',
     'django_fields',
     'multiselectfield',
-    'notifications'
+    'notifications',
+    'import_export',
 ]
 
 MIDDLEWARE = [
@@ -126,7 +127,7 @@ USE_TZ = True
 CRISPY_TEMPLATE_PACK = "bootstrap4"
 
 
-
+IMPORT_EXPORT_EXPORT_PERMISSION_CODE = 'delete'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
@@ -152,4 +153,4 @@ EMAIL_HOST_USER = 'tuitionbd232@gmail.com'
 EMAIL_HOST_PASSWORD = 'hkckmoeqkzxjzfed'
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
-DEFAULT_FROM_EMAIL = 'TuitionBD ADdmin Team <tuitionbd232@gmail.com>'
+DEFAULT_FROM_EMAIL = 'TuitionBD Admin <tuitionbd232@gmail.com>'

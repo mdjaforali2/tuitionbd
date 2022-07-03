@@ -1,17 +1,32 @@
 {% extends 'basic.html' %}
 {% block body %}
 {% load notifications_tags %}
-<div class="container">
-    {% notifications_unread as unread_count %}
+
+<style>
+
+</style>
+
+<div class="container p-4">
+    <div class="text-center">
+        <h2 class="font-weight-bold mt-3">Notifications</h2>
+        <hr>
+    </div>
+    {% comment %} {% notifications_unread as unread_count %}
         {% if unread_count %}
             You have <b>{% live_notify_badge %}</b> unread notifications.
             {% live_notify_list %}
             {{ live_notify_list | safe }}
-        {% endif %}
-        <h1> Your all notifications: </h1> <br>
-        {% for i in user.notifications.unread %}
-            {{ i | safe}} <br>
-        {% endfor %}
+        {% endif %} {% endcomment %}
+        <div class="text-center">
+            {% for i in user.notifications.unread %}
+            <button type="submit" class="btn btn-dark" style="color: white">
+                {{ i | safe}} 
+            </button>
+            <br>
+            <br>
+            {% endfor %}
+        </div>
+
 
 </div>
 {% endblock  %}

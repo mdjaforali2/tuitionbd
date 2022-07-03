@@ -28,6 +28,12 @@
                 </button>
             </div>
 
+            <div class='text-center'>
+                <button type="submit" class="btn btn-link">
+                    <a href="/session/userproupdate/{{user.userprofile.id}}/">Update Profile</a>
+                </button>
+            </div>
+
             {% if user.tuitionprofile %}
             <div class='text-center'>
                 <button type="submit" class="btn btn-link">
@@ -51,15 +57,12 @@
             <div class="col-md-12 offset-md- p-3 border">
               <div class="text-center">
                   <h3 class="border-bottom"> <legend> Basic Info </legend></h3>
-                  Gender: {{user.userprofile.gender}} <br>
                   Date of Birth: {{user.userprofile.birth_date}} <br>
                   Blood Group: {{user.userprofile.blood_group}} <br>
                   Nationality: {{user.userprofile.nationality}} <br>
                   Religion: {{user.userprofile.religion}} <br>
-                  Role: {{user.userprofile.role}} <br>
-                  Address: {{user.userprofile.address}}, {{user.tuitionprofile.district}} <br>
                   Phone: {{user.userprofile.phone}} <br>
-                  Email: {{user.email_address}}
+                  Email: {{user.email}}
               </div>
             </div>
         </div>
@@ -71,16 +74,17 @@
             <div class="col-md-12 offset-md- p-3 border">
               <div class="text-center">
                 <h3 class="border-bottom"> <legend> Tution Related Info </legend></h3>
+                Address: {{user.tuitionprofile.address}}, {{user.tuitionprofile.upazilla}}, {{user.tuitionprofile.district}}<br>
                 Style: {{user.tuitionprofile.style}} <br>
                 Place: {{user.tuitionprofile.place}} <br>
                 Approach: {{user.tuitionprofile.approach}} <br>
                 Approach: {{user.tuitionprofile.medium}} <br>
-                Subjects: {% for s in user.tuitionprofile.subject.all %} {{s}}
+                Subjects I Teach: {{user.tuitionprofile.subjects}}
                           {% comment %} {% if not forloop.last %},{% endif %} {% endcomment %}
-                          {% endfor %} <br>
-                Class In: {% for s in user.tuitionprofile.class_in.all %} {{s}}
+                           <br>
+                Class In: {{user.tuitionprofile.classes}}
                           {% comment %} {% if not forloop.last %},{% endif %} {% endcomment %}
-                          {% endfor %} <br>
+                          <br>
                 Salary: {{user.tuitionprofile.salary}} <br>
                 Days Per Week: {{user.tuitionprofile.days_per_week}} <br>
                 Education: {{user.tuitionprofile.education}} <br>

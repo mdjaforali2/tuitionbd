@@ -1,0 +1,41 @@
+{% extends 'basic.html' %}
+{% block body %}
+{% load crispy_forms_tags %}
+
+
+<div class="container p-4">
+    <div class="text-center">
+        <h2 class="font-weight-bold mt-3">Conditional Offer</h2>
+        <hr>
+    </div>
+
+    <b>Congratulations! {{candidate.user.first_name}} {{candidate.user.last_name}}, for being selected for this tuition. We appreciate your efforts and endeavour.</b>
+    <br>
+    <br>
+    Here are the conditions to accept the Tuition:
+    <ul>
+        <li>I will be available <b>{{post.days_per_week}} days</b> per week at: <b>{{post.address}}, {{post.upazilla}}, {{post.district}}</b> from <b>{{post.starting_from}}</b></li>
+        <li>I will take care of: <b>{{post.subjects}}</b> for a <b>{{post.classes}} Student</b></li>
+        <li>Monthly Salary: <b>{{post.salary}}BDT</b></li>
+        <li>I agree to pay: <b>{{deposit}}BDT</b> (equivalent to 10% of your monthly salary) as Service Charge to TuitionBD within 30 days</li>
+        <li>I'm okay with these special requirements: <b>{{post.details}}</b></li>
+    </ul>
+    <br>
+    NB: Denying this offerings means, you are no longer be an applicant for this Tuition.</b>
+
+    <br> 
+    <form method="post" action="">
+        <div class="text-center">
+            <h5 class="font-weight-bold mt-3">Make a Decission</h5>
+            <hr>
+        </div>
+        {% csrf_token %}
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary"><a href="/tuition/candidate_accept/{{id}}/{{pk}}/" style="color: white">Yes, I Agree</a></button>
+            <button type="submit" class="btn btn-danger"><a href="/tuition/candidate_cancel/{{id}}/{{pk}}/" style="color: white">No, I Don't</a></button>
+        </div>
+    </form>
+    <br><br><br>
+    <b>If you have any quries, feel free to <a href="/tuition/contact/">Contact Us.</a></b>
+</div>  
+{% endblock body %}

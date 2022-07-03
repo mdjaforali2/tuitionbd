@@ -1,7 +1,9 @@
+from distutils.archive_util import make_zipfile
 from distutils.command.upload import upload
 import email
 from email.mime import image
 from email.policy import default
+from logging import PlaceHolder
 from pyexpat import model
 from secrets import choice
 from sre_constants import CATEGORY
@@ -13,6 +15,9 @@ from PIL import Image
 from django.utils.text import slugify
 from multiselectfield import MultiSelectField
 from django.contrib.auth.models import User
+from session.models import Division, District, Upazilla, TuitionProfile
+
+
 
 class PostManager(models.Manager):
     def sorted(self, title):
@@ -21,24 +26,7 @@ class PostManager(models.Manager):
         return self.filter(salary__lt=size)
 # Create your models here.
 
-class Subject(models.Model):
-    name = models.CharField(max_length=100)
-    def __str__(self):
-        return self.name
-    def get_total_post(self):
-        return self.subject_set.all().count()
-    def get_post_list(self):
-        return self.subject_set.all()   
 
-class Class_in(models.Model):
-    name = models.CharField(max_length=100)
-    def __str__(self):
-        return self.name
-
-class District(models.Model):
-    name = models.CharField(max_length=100)
-    def __str__(self):
-        return self.name        
 
 class Contact(models.Model):
     name = models.CharField(max_length=100)
@@ -48,43 +36,6 @@ class Contact(models.Model):
     def __str__(self):
         return self.name
 
-# class Post(models.Model):
-#     CATEGORY = (
-#         ('Techer', 'Teacher'),
-#         ('Student', 'Student'),
-#     )
-#     MEDIUM = (
-#         ('Bangla', 'Bangla'),
-#         ('English', 'English'),
-#         ('Hindi', 'Hindi'),
-#         ('Urdu', 'Urdu'),
-#         ('Arabic', 'Arabic'),
-#     )
-
-#     # user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True) 
-#     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True) 
-#     id = models.AutoField(primary_key=True)
-#     title = models.CharField(max_length=100)
-#     slug = models.CharField(max_length=100, default=title)
-#     email = models.EmailField()
-#     salary = models.FloatField()
-#     details = models.TextField()
-#     available = models.BooleanField()
-#     category = models.CharField(max_length=100, choices=CATEGORY)
-#     created_at = models.DateTimeField(default=now)
-#     image = models.ImageField(default='tuition/images/default.jpeg',upload_to='tuition/images/')
-#     medium = MultiSelectField(max_length=200, max_choices=5, choices=MEDIUM, default='Bangla')
-#     subject = models.ManyToManyField(Subject, related_name='subject_set')
-#     class_in = models.ManyToManyField(Class_in, related_name='class_set')
-#     def save(self, *args, **kwargs):
-#         self.slug = slugify(self.title)
-#         super(Post, self).save(*args, **kwargs)
-#         img = Image.open(self.image.path)
-#         if img.height > 300 or img.width > 300:
-#             output_size=(300,300)
-#             img.thumbnail (output_size)
-#             img.save(self.image.path)
-
     
 class Post(models.Model):
     CATEGORY = (
@@ -92,33 +43,115 @@ class Post(models.Model):
         ('Tutor', 'Tutor')
     )
     MEDIUM = (
+        ('Arabic_Medium', 'Arabic'),
+        ('Bangla_Medium', 'Bangla'),
+        ('English_Medium', 'English'),
+    )
+
+    STUDENT_COUNT = (
+        ('1', '1'),
+        ('2', '2'),
+        ('3', '3'),
+        ('4', '4'),
+        ('More than 4', 'More than 4'),
+    )
+
+    DAYS_PER_WEEK = (
+        ('1', '1'),
+        ('2', '2'),
+        ('3', '3'),
+        ('4', '4'),
+        ('5', '5'),
+        ('6', '6'),
+        ('7', '7'),
+    )
+
+    class_selection = (
+        ('Pre-Primary', 'Pre-Primary'),
+        ('Class 1', 'Class 1'),
+        ('Class 2', 'Class 2'),
+        ('Class 3', 'Class 3'),
+        ('Class 4', 'Class 4'),
+        ('Class 5', 'Class 5'),
+        ('Class 6', 'Class 6'),
+        ('Class 7', 'Class 7'),
+        ('Class 8', 'Class 8'),
+        ('Class 9', 'Class 9'),
+        ('Class 10', 'Class 10'),
+        ('SSC Candidate' , 'SSC Candidate'),
+        ('College Student', 'College Student'),
+        ('HSC Candidate', 'HSC Candidate'),
+        ('University Student', 'University Student'),
+        ('Madrasha Student', 'Madrasha Student'),
+        ('Technical Student', 'Technical Student'),
+        ('Diploma Student', 'Diploma Student'),
+        ('Course Student', 'Course Student'),
+    )
+
+    subjects = (
+        ('Arabic', 'Arabic'),
         ('Bangla', 'Bangla'),
         ('English', 'English'),
-        ('Hindi', 'Hindi'),
-        ('Urdu', 'Urdu'),
-        ('Arabic', 'Arabic'),
+        ('Math', 'Math'),
+        ('General Science', 'General Science'),
+        ('Bangladesh and Global Studies', 'Bangladesh and Global Studies'),
+        ('Religion and Moral Studies', 'Religion and Moral Studies'),
+        ('ICT', 'ICT'),
+        ('Physics', 'Physics'),
+        ('Chemistry', 'Chemistry'),
+        ('Biology', 'Biology'),
+        ('Higher Math', 'Higher Math'),
+        ('Accounting', 'Accounting'),
+        ('Finance, Banking, and Insurance', 'Finance, Banking, and Insurance'),
+        ('Business Entrepreneurship', 'Business Entrepreneurship'),
+        ('Agricultural Studies', 'Agricultural Studies'),
+        ('Statistics', 'Statistics'),
+        ('Business Organization and Management', 'Business Organization and Management'),
+        ('Production Management and Marketing', 'Production Management and Marketing'),
+        ('Economics', 'Economics'),
+        ('Psychology', 'Psychology'),
+        ('Logic', 'Logic'),
+        ('Sociology', 'Sociology'),
+        ('Social Work', 'Social Work'),
+        ('Geography', 'Geography'),
+        ('Studies of Islam', 'Studies of Islam'),
+        ('Home Science', 'Home Science'),
+        ('All Subjects', 'All Subjects'),
+    )
+    GENRE_CHOICES = (
+        ('Male', 'Male Tutor'),
+        ('Female', 'Female Tutor'),
+        ('Any', 'Any')
     )
 
     # user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True) 
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True) 
     id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=100)
+    starting_from = models.DateField(null=True)
+    gender = models.CharField(max_length=20, choices=GENRE_CHOICES, null=True)
+    division = models.ForeignKey(Division, on_delete=models.SET_NULL, null=True)
+    district = models.ForeignKey(District, on_delete=models.SET_NULL, null=True)
+    upazilla = models.ForeignKey(Upazilla, on_delete=models.SET_NULL, null=True)
+    address = models.CharField(max_length=50, null=True)
+    student_count = models.CharField(max_length=50, choices=STUDENT_COUNT, default='1')
     slug = models.CharField(max_length=100, default=title)
-    email = models.EmailField()
-    salary = models.FloatField()
-    details = models.TextField()
-    available = models.BooleanField()
+    available = models.BooleanField(default=True)
     category = models.CharField(max_length=100, choices=CATEGORY)
     created_at = models.DateTimeField(default=now)
-    image = models.ImageField(default='default.png',upload_to='tuition/images/')
-    medium = MultiSelectField(max_length=200, max_choices=5, choices=MEDIUM, default='Bangla')
-    subject = models.ManyToManyField(Subject, related_name='subject_set')
-    class_in = models.ManyToManyField(Class_in, related_name='class_set')
-    district = models.CharField(max_length=100, null=True, blank=True)
+    medium = MultiSelectField(choices=MEDIUM, max_choices=2, max_length=100)
+    classes = MultiSelectField(choices=class_selection, max_choices=7, max_length=150, null=True)
+    subjects = MultiSelectField(choices=subjects, max_choices=10, max_length=150, null=True)
+    image = models.ImageField(default='student.png',upload_to='tuition/images/')
+    salary = models.IntegerField()
+    days_per_week = models.CharField(max_length=5, choices=DAYS_PER_WEEK, default='5')
+    details = models.TextField()
     likes = models.ManyToManyField(User, related_name='post_likes')
     views = models.ManyToManyField(User, related_name='post_views')
     applicants = models.ManyToManyField(User, related_name='applicant_set')
-
+    candidate = models.ManyToManyField(TuitionProfile, related_name='candidate')
+    tutor = models.ManyToManyField(TuitionProfile, related_name='tutor')
+    
     def total_likes(self):
         return self.likes.count()
     
@@ -136,19 +169,7 @@ class Post(models.Model):
     def __str__(self):
         return self.title + " by :" + self.user.username
 
-    def get_subject_list(self):
-        sub = self.subject.all()
-        subjects = ""
-        for s in sub:
-            subjects += str(s.name) + " "
-        return subjects
-
-    def get_class_list(self):
-        cls = self.class_in.all()
-        classes = ""
-        for c in cls:
-            classes += str(c.name) + " "
-        return classes
+ 
 
     def proper_title(self):
         return str(self.title).title()

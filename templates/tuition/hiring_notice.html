@@ -1,0 +1,25 @@
+{% extends 'basic.html' %}
+{% block body %}
+
+
+<div class="container p-4">
+    <h2 class="font-weight-bold mt-3">Hiring Notice</h2>
+    <hr>
+        <div>
+            <h4 class="font-weight mt-3">What' Next</h4>
+                <ul>
+                    <li>After your confirmation, an email will be sent to the selected candidate to make a decision according to the conditions mentioned in the post.</li>
+                    <li>This email will be considered as the proof of acceptance for this tuition.</li>
+                </ul>
+            <br> 
+            <h6 class="font-weight mt-3">By confirming this agreement you agree to hire <a href="/session/otherpro/{{candidate.user.id}}/">{{candidate.user.first_name}} {{candidate.user.last_name}}</a> for this <a href="/tuition/postdetail/{{id}}/">Tuition Post</a>.</h6>
+            <br>
+            <div class="text-center">
+                <button type="submit" class="btn"><a href="/tuition/confirm_hiring/{{post.id}}/{{candidate.id}}">Yes, I Confirm</a></button>
+            </div>
+        </div>
+    </form>
+</div> 
+
+
+{% endblock body %}

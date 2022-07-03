@@ -22,7 +22,7 @@
             </thead>
             <tbody>
                 {% for a in applicants %}
-                <th scope="row"><a href="/session/otherpro/{{a.username}}/">{{a.get_full_name}}</a></th>
+                <th scope="row"><a href="/session/otherpro/{{a.id}}/">{{a.get_full_name}}</a></th>
                 <td>{{a.userprofile.gender}}</td>
                 <td>{{a.tuitionprofile.district}}</td>
                 <td><span class="badge badge-secondary">{{a.userprofile.birth_date}}</span></td>
@@ -30,7 +30,7 @@
                 <td>{{a.tuitionprofile.days_per_week}} </td>
                 <td><span class="badge badge-secondary">{{a.tuitionprofile.education}}</span></td>
                 <td>{{a.userprofile.phone}} </td>
-                <td><a href="">Pending</a> </td>
+                <td><button class="btn"> <a href="/tuition/hire/{{id}}/{{a.tuitionprofile.id}}/">Hire</a> </button> </td>
             </tbody>
             {% endfor %}
         </table>

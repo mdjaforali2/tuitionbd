@@ -21,11 +21,9 @@ class ContactForm(forms.ModelForm):
         #     'phone':forms.TextInput(attrs={'class':'form-control', 'placeholder':'Enter Your Phone:'}),
         #     'content':forms.Textarea(attrs={'class':'form-control', 'placeholder':'Say something:', 'rows':5})
         # }
-        # labels = {
-        #     'name':'Your Name',
-        #     'phone':'Your Phone Number',
-        #     'content':'Your Words',
-        # }
+        labels = {
+            'content':'Write your message:',
+        }
         # help_texts = {
         #     'name':'Your Name',
         #     'phone':'Your Phone Number',
@@ -57,10 +55,15 @@ class ContactFormtwo(forms.ModelForm):
 #         model = Post
 #         fields = '__all__'
 from .fields import ListTextWidget
+
+
 class PostForm(forms.ModelForm):
+    starting_from = forms.DateField(widget=forms.TextInput(
+        attrs={'type':'date'}
+    ))
     class Meta:
         model = Post
-        exclude = ['user', 'id', 'slug', 'created_at', 'likes', 'views', 'applicants']
+        exclude = ['user','email', 'available', 'category', 'id', 'slug', 'created_at', 'likes', 'views', 'applicants', 'candidate', 'tutor']
         widgets = {
             'class_in':forms.CheckboxSelectMultiple(attrs={
                 'multiple':True,
@@ -72,8 +75,19 @@ class PostForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         _district_set = kwargs.pop('district_set',None)
         super(PostForm,self).__init__(*args, **kwargs)
-        self.fields['district'].widget = ListTextWidget(data_list=_district_set, name='district-set')
-        self.fields['details'].initial = 'Nothing to say.'
+        self.fields['details'].initial = 'No special requirements.'
+        self.fields['salary'].label = 'Budget for this Tuition (Monthly):'
+        self.fields['subjects'].label = 'Subjects Selection for this Tuition'
+        self.fields['classes'].label = 'Student Class Selection'
+        self.fields['image'].label = 'Upload a Photo of the Student/Students'
+        self.fields['student_count'].label = 'Number of Student/Students for this Tuition'
+        self.fields['details'].label = 'Special Requirements for the Tutor to follow:'
+        self.fields['division'].label = 'Enter Address for this Tuition, Division:'
+        self.fields['address'].label = 'House, Road No, Village/Mouza, Union / Ward No:'
+        self.fields['title'].widget.attrs['placeholder'] = 'I am looking for a Math Tutor'
+        self.fields['address'].widget.attrs['placeholder'] = '87/Ka, Nazrul Avenue, 2nd Kandirpar, Ward-10'
+        self.fields['gender'].label = 'Looking for a: (Gender)'
+        self.fields['starting_from'].label = 'Tuition Starting From:'
 
 class FileModelForm(forms.ModelForm):
     class Meta:

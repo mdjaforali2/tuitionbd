@@ -1,18 +1,21 @@
 from cgitb import text
+from email import message
 from enum import unique
 from multiprocessing import context
+from queue import Empty
 import re
 from django.forms import SlugField
 from django.shortcuts import redirect, render
 from django.http import HttpResponse
 from re import template
 from django.shortcuts import render, HttpResponse
-from .models import Class_in, Comment, District, Postfile, Contact, Post, Subject
+from urllib3 import HTTPResponse
+from .models import Comment,  Postfile, Contact, Post
 from .forms import CommentForm, ContactForm, PostForm, FileModelForm, CommentForm
 from django.views import View
 from django.views.generic import FormView, DetailView, DeleteView, UpdateView, ListView, CreateView
 from django.views.generic.detail import DetailView
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.db import models
 from django.contrib import messages
 from django.db.models import Q
@@ -23,6 +26,7 @@ from session.models import TuitionProfile, User
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
+from session.models import UserProfile, TuitionProfile
 
 # Create your views here.
 def contact(request):
@@ -60,87 +64,115 @@ def postview(request):
     posts = Post.objects.all()
     return render(request, 'tuition/postview.html', {'post':posts})
 
-def subview(request):
-    sub = Subject.objects.get(name='Bangla')
-    post = sub.subject_set.all()
-    return render(request, 'tuition/subjectview.html', {'sub':sub, 'post':post})
 
-def receiverchoose(j, obj):
-    count = 0 
-    if j.district == obj.district:
-        count+=1
-    for i in j.medium:
-        for k in obj.medium:
-            if i==k:
-                count+=1
-                break
-    for i in j.subject.all():
-        for k in obj.subject.all():
-            if i==k:
-                count+=1
-                break
-    for i in j.class_in.all():
-        for k in obj.class_in.all():
-            if i==k:
-                count+=1
-                break
-    if count >= 3:
-        return True
+
 
 def postcreate(request):
     if request.method == "POST":
+        e = 0
         form = PostForm(request.POST, request.FILES)
         if form.is_valid():
             obj = form.save(commit=False)
             obj.user = request.user
             obj.save()
-            dis = form.cleaned_data['district']
-            if not District.objects.filter(name=dis).exists():
-                disobj = District(name=dis)
-                disobj.save()
-            sub = form.cleaned_data['subject']
-            for i in sub:
-                obj.subject.add(i)
-                obj.save()
+
+            # upazilla = form.cleaned_data['upazilla']
+            # if not District.objects.filter(name=dis).exists():
+                # disobj = District(name=dis)
+                # disobj.save()
+
+            # sub = form.cleaned_data['subjects']
+            # for i in sub:
+            #     obj.subjects.add(i)
+            #     obj.save()
        
-            class_in = form.cleaned_data['class_in']
-            for i in class_in:
-                obj.class_in.add(i)
-                obj.save()
-            us = TuitionProfile.objects.all()
+            # class_in = form.cleaned_data['classes']
+            # for i in class_in:
+            #     obj.classes.add(i)
+            #     obj.save()
+
+            us = TuitionProfile.objects.all()     
             for i in us:
-                if receiverchoose(i, obj):
-                    receiver = i.user
-                    postid = obj.id
-                    if receiver != request.user:
-                        current_site = get_current_site(request)
-                        mail_subject = "Post Alert From TuitionBD"
-                        message = render_to_string('tuition/searchmatch.html', {
-                            'user': receiver,
-                            'domain': current_site.domain,
-                            'id': postid,
-                        })
-                        send_mail = i.user.email
-                        email = EmailMessage(mail_subject, message, to=[send_mail])
-                        email.send()
-                        notify.send(request.user, recipient=receiver, verb=" has created a post which matches your profile" + f'''<a href="/tuition/postdetail/{obj.id}/"> go</a>''')
+                count = 0
+                m = 0
+                s = 0
+                c = 0
+                g = 0
+                e = 0
+                
+                if i.user != request.user:
+                    if i.status == 'Available':
+                        count += 1
+
+                    if i.upazilla == obj.upazilla:
+                        count += 1
+
+                    for j in i.medium:
+                        for k in obj.medium:
+                            if j==k:
+                                m+=1
+                                break
+                    
+                    for j in i.subjects:
+                        for k in obj.subjects:
+                            if j==k:
+                                s+=1
+                                break
+            
+                    for j in i.classes:
+                        for k in obj.classes:
+                            if j==k:
+                                c+=1
+                                break
+                    
+                    if obj.gender == 'Any':
+                        g += 1
+
+                    else:
+                        if obj.gender == i.gender:
+                            g += 1
+                    
+                    if obj.gender:
+                        e += 1
+
+                    if count >= 2 and m >= 1 and s >= 1 and c >= 1 and g>=1:
+                            receiver = i.user
+                            postid = obj.id
+                            if receiver != request.user:
+                                current_site = get_current_site(request)
+                                mail_subject = "Post Alert From TuitionBD"
+                                message = render_to_string('tuition/searchmatch.html', {
+                                    'user': receiver,
+                                    'domain': current_site.domain,
+                                    'id': postid,
+                                })
+                                send_mail = i.user.email
+                                email = EmailMessage(mail_subject, message, to=[send_mail])
+                                email.send()
+                                notify.send(request.user, recipient=receiver, verb=" has created a post which matches your profile" + f'''<a href="/tuition/postdetail/{obj.id}/"> go</a>''')
             messages.success(request, 'Succesfully Posted!')
-            return redirect ('/tuition/postlist/')           
+            return redirect ('/tuition/postlist/')  
+    
     else:
-        form = PostForm(district_set=District.objects.all().order_by('name'))
-    return render(request, 'tuition/postcreate.html', {'form': form})
+        # form = PostForm(district_set=District.objects.all().order_by('name'))
+        form = PostForm()
+        e = 0
+        
+    return render(request, 'tuition/postcreate.html', {'form': form, 'e':e})
+
+
 
 def postupdate(request, id):                                         
     data = Post.objects.get(id=id)  
-    form = PostForm(district_set=District.objects.all().order_by('name'), instance = data)
+    form = PostForm(instance = data)
     if request.method == "POST":
         form = PostForm(request.POST, request.FILES, instance=data)  
         if form.is_valid():
             form.save()
             dis = form.cleaned_data['district']
-            if not District.objects.filter(name=dis).exists():
-                disobj = District(name=dis)
-                disobj.save()
+            # if not District.objects.filter(name=dis).exists():
+            #     disobj = District(name=dis)
+            #     disobj.save()
             messages.success(request, 'Succesfully Updated!')
             return redirect ('/tuition/postlist/') 
     return render(request, 'tuition/postcreate.html', {'form': form})
@@ -194,14 +226,14 @@ class PostListView(ListView):
         context = super().get_context_data(*args, **kwargs)
         # context['posts'] = context.get('objects_list')
         # context['msg'] = 'This is a post list'
-        context['subjects'] = Subject.objects.all()
-        context['classes'] = Class_in.objects.all()
-        context['districts'] = District.objects.all()
+        # context['districts'] = District.objects.all()
         return context
 
 class PostDetailView(DetailView):
     model = Post
     template_name = 'tuition/postdetail.html'
+    up = 0
+    tp = 0
     def get_context_data(self, *args, **kwargs):
         self.object.views.add(self.request.user)
         liked = False
@@ -217,8 +249,38 @@ class PostDetailView(DetailView):
                 DictofReply[reply.parent.id] = [reply]
             else:
                 DictofReply[reply.parent.id].append(reply)
+
+        if UserProfile.objects.filter(user=self.request.user).exists():
+            up = 1
+        else:
+            up = 0
+
+        if TuitionProfile.objects.filter(user=self.request.user).exists():
+            tp = 1
+        else:
+            tp = 0
+
         applied_applicants = post.applicants.all()
+        selected_candidate = post.candidate.all()
+        total_candidate = post.candidate.all().count()
+        tutor_count = post.tutor.all().count()
+
+        if total_candidate>= 1:
+            count = 1
+        elif total_candidate == 0:
+            count = 0
+
+        if tutor_count >= 1:
+            t_c = 1
+        elif tutor_count == 0:
+            t_c = 0
+
         context['applied_applicants'] = applied_applicants
+        context['selected_candidate'] = selected_candidate
+        context['count'] = count
+        context['t_c'] = t_c
+        context['up'] = up
+        context['tp'] = tp
         context['liked'] = liked
         context['comments'] = comments
         context['DictofReply'] = DictofReply
@@ -254,9 +316,7 @@ def search(request):
     context = {
         'object_list' : results
     }
-    context['subjects'] = Subject.objects.all()
-    context['classes'] = Class_in.objects.all()
-    context['districts'] = District.objects.all()
+    # context['districts'] = District.objects.all()
     return render(request, 'tuition/search.html', context)
 
 
@@ -286,9 +346,7 @@ def filter(request):
         
         }
 
-        context['subjects'] = Subject.objects.all()
-        context['classes'] = Class_in.objects.all()
-        context['districts'] = District.objects.all()
+        # context['districts'] = District.objects.all()
         return render(request, 'tuition/search.html', context)
 
 
@@ -400,7 +458,7 @@ def apply(request,id):
     if request.user != post.user:
         post.applicants.add(request.user)
         post.save()
-        notify.send(request.user, recipient=post.user, verb="has applied on a post of you " + f'''<a href="/session/otherpro/{request.user.username}/">See Profile</a>''')
+        notify.send(request.user, recipient=post.user, verb="has applied on a" + f'''<a href="/tuition/postdetail/{id}/"> Post</a>''' + " of you." + f'''<a href="/session/otherpro/{request.user.id}/"> See Profile</a>''')
         messages.success(request, 'You have successfully applied for this tuition')
         return redirect(f"/tuition/postdetail/{id}/")
 
@@ -419,5 +477,101 @@ def applicants(request, id):
     applicants = post.applicants.all()
     context = {
         'applicants' : applicants,
+        'id' : id,
     }
     return render(request, 'tuition/applicantslist.html', context)
+
+
+def hire(request, id, pk):
+    post = Post.objects.get(id=id)
+    selected_candidate = TuitionProfile.objects.get(id=pk)
+    context = {
+        'candidate' : selected_candidate,
+        'id' : id,
+        'post' : post,
+    }
+    return render(request, 'tuition/hiring_notice.html', context)
+
+
+def confirm_hiring(request, id, pk):
+    post = Post.objects.get(id=id)
+    selected_candidate = TuitionProfile.objects.get(id=pk)
+    deposit = post.salary * 0.1
+    recipient=selected_candidate.user
+    current_site = get_current_site(request)
+    context = {
+        'candidate' : selected_candidate,
+        'id' : id,
+        'post' : post,
+        'recipient' : recipient,
+        'deposit' : deposit,
+        'domain' : current_site.domain,
+    }
+    if request.user == post.user:
+        post.candidate.add(selected_candidate)
+        post.save()
+        mail_subject = "TuitionBD: Application Update"
+        message = render_to_string('tuition/candidate_mail.html', context)
+        send_mail = recipient.email
+        email = EmailMessage(mail_subject, message, to=[send_mail])
+        # email.send()
+        notify.send(sender=request.user, recipient=recipient, verb="has selected you for this " + f'''<a href="/tuition/postdetail/{id}/">Tuition.</a>''')
+        return redirect(f"/tuition/postdetail/{id}/")
+
+
+def candidate_decision_make(request, id, pk):
+    post = Post.objects.get(id=id)
+    selected_candidate = TuitionProfile.objects.get(id=pk)
+    deposit = post.salary * 0.1
+    context = {
+        'candidate' : selected_candidate,
+        'id' : id,
+        'post' : post,
+        'deposit' : deposit,
+        'pk' : pk,
+    }
+    return render(request, 'tuition/candidate_decision_make.html', context)
+
+
+def candidate_cancel(request, id, pk):
+    post = Post.objects.get(id=id)
+    selected_candidate = TuitionProfile.objects.get(id=pk)
+    selected_candidate.user
+    post.candidate.remove(selected_candidate)
+    post.applicants.remove(selected_candidate.user)
+    post.available = True
+    post.save()
+    messages.warning(request, 'Your application has been cancelled')
+    notify.send(sender=request.user, recipient=post.user, verb="is no more interested in this" + f'''<a href="/tuition/postdetail/{id}/"> Tuition Post.</a>''' + f'''<a href="/tuition/applicants/{id}/"> Find another Tutor.</a>''')
+    return redirect('/')
+
+def candidate_accept(request, id, pk):
+    post = Post.objects.get(id=id)
+    selected_candidate = TuitionProfile.objects.get(id=pk)
+    if request.user == selected_candidate.user:
+        post.tutor.add(selected_candidate)
+        post.available = False
+        post.save()
+    return redirect(f"/tuition/postdetail/{id}/")
+
+def candidate_delete(request, id, pk):
+    post = Post.objects.get(id=id)
+    selected_candidate = TuitionProfile.objects.get(id=pk)
+    context = {
+        'candidate' : selected_candidate,
+        'id' : id,
+        'post' : post,
+        'pk' : pk,
+    }
+    return render(request, 'tuition/candidate_delete.html', context)
+
+
+def candidate_delete_confirm(request, id, pk):
+    post = Post.objects.get(id=id)
+    selected_candidate = TuitionProfile.objects.get(id=pk)
+    cancelled_candidate_name = selected_candidate.user.get_full_name()
+    post.candidate.remove(selected_candidate)
+    post.save()
+    messages.warning(request, f'''{cancelled_candidate_name} has been removed from hiring''')
+    return redirect(f"/tuition/postdetail/{id}/")
+
