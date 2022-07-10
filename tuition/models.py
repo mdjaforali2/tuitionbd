@@ -116,12 +116,12 @@ class Post(models.Model):
         ('Geography', 'Geography'),
         ('Studies of Islam', 'Studies of Islam'),
         ('Home Science', 'Home Science'),
-        ('All Subjects', 'All Subjects'),
+        ('All Subjects for the selected Class', 'All Subjects for the selected Class'),
     )
     GENRE_CHOICES = (
-        ('Male', 'Male Tutor'),
-        ('Female', 'Female Tutor'),
-        ('Any', 'Any')
+        ('Male Tutor', 'Male Tutor'),
+        ('Female Tutor', 'Female Tutor'),
+        ('Male/Female Tutor', 'Male/Female Tutor')
     )
 
     # user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True, null=True) 
@@ -205,3 +205,17 @@ class Postfile(models.Model):
             output_size = (300, 300)
             img.thumbnail(output_size)
             img.save(self.image.path)
+
+class Filter(models.Model):
+    GENRE_CHOICES = (
+        ('Male Tutor', 'Male Tutor'),
+        ('Female Tutor', 'Female Tutor'),
+        ('Male/Female Tutor', 'Male/Female Tutor')
+    )
+    gender = models.CharField(max_length=20, choices=GENRE_CHOICES, blank=True, null=True)
+    division = models.ForeignKey(Division, on_delete=models.SET_NULL, blank=True, null=True)
+    district = models.ForeignKey(District, on_delete=models.SET_NULL, blank=True, null=True)
+    upazilla = models.ForeignKey(Upazilla, on_delete=models.SET_NULL, blank=True, null=True)
+    available = models.BooleanField(default=True, blank=True)
+
+

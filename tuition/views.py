@@ -11,7 +11,7 @@ from re import template
 from django.shortcuts import render, HttpResponse
 from urllib3 import HTTPResponse
 from .models import Comment,  Postfile, Contact, Post
-from .forms import CommentForm, ContactForm, PostForm, FileModelForm, CommentForm
+from .forms import CommentForm, ContactForm, PostForm, FileModelForm, CommentForm, FilterForm
 from django.views import View
 from django.views.generic import FormView, DetailView, DeleteView, UpdateView, ListView, CreateView
 from django.views.generic.detail import DetailView
@@ -27,6 +27,9 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
 from session.models import UserProfile, TuitionProfile
+
+from django.http import HttpResponseRedirect
+from notifications.signals import notify
 
 # Create your views here.
 def contact(request):
@@ -149,7 +152,7 @@ def postcreate(request):
                                 send_mail = i.user.email
                                 email = EmailMessage(mail_subject, message, to=[send_mail])
                                 email.send()
-                                notify.send(request.user, recipient=receiver, verb=" has created a post which matches your profile" + f'''<a href="/tuition/postdetail/{obj.id}/"> go</a>''')
+                                notify.send(request.user, recipient=receiver, verb="A" + f'''<a href="/tuition/postdetail/{obj.id}/">Tuition Post</a>''' + "has been created that matches your profile.")
             messages.success(request, 'Succesfully Posted!')
             return redirect ('/tuition/postlist/')  
     
@@ -190,7 +193,12 @@ def postupdate(request, id):
 #             form.save()
 #             return HttpResponse("Success")
 #         return render(request, self.template_name, {'form':form})
-        
+
+
+
+
+
+
 class ContactView(FormView):
     form_class = ContactForm
     template_name = 'contact.html'
@@ -475,9 +483,16 @@ def cancel(request,id):
 def applicants(request, id):
     post = Post.objects.get(id=id)
     applicants = post.applicants.all()
+    tutor = post.tutor.all().count()
+    if tutor >= 1:
+        t = 1
+    elif tutor == 0:
+        t = 0 
     context = {
         'applicants' : applicants,
         'id' : id,
+        'post' : post,
+        't' : t
     }
     return render(request, 'tuition/applicantslist.html', context)
 
@@ -485,10 +500,12 @@ def applicants(request, id):
 def hire(request, id, pk):
     post = Post.objects.get(id=id)
     selected_candidate = TuitionProfile.objects.get(id=pk)
+    deposit = post.salary * 0.1
     context = {
         'candidate' : selected_candidate,
         'id' : id,
         'post' : post,
+        'deposit' : deposit,
     }
     return render(request, 'tuition/hiring_notice.html', context)
 
@@ -515,7 +532,7 @@ def confirm_hiring(request, id, pk):
         send_mail = recipient.email
         email = EmailMessage(mail_subject, message, to=[send_mail])
         # email.send()
-        notify.send(sender=request.user, recipient=recipient, verb="has selected you for this " + f'''<a href="/tuition/postdetail/{id}/">Tuition.</a>''')
+        notify.send(sender=request.user, recipient=recipient, verb="has selected you for a " + f'''<a href="/tuition/postdetail/{id}/">Tuition.</a>''')
         return redirect(f"/tuition/postdetail/{id}/")
 
 
@@ -575,3 +592,44 @@ def candidate_delete_confirm(request, id, pk):
     messages.warning(request, f'''{cancelled_candidate_name} has been removed from hiring''')
     return redirect(f"/tuition/postdetail/{id}/")
 
+def filter_postlist(request):
+    posts = Post.objects.filter(available=True)
+    form = FilterForm(request.POST, request.FILES)
+    gender = request.POST.get('gender')
+    division = request.POST.get('division')
+    district = request.POST.get('district')
+    upazilla = request.POST.get('upazilla')
+    available = request.POST.get('available')
+    if available == None:
+        posts = Post.objects.filter(available=False)
+        if gender:
+            posts = posts.filter(gender=gender)
+        if division:
+            posts = posts.filter(division=division)
+        if district:
+            posts = posts.filter(district=district)
+        if upazilla:
+            posts = posts.filter(upazilla=upazilla)
+
+    elif available == 'on':
+        posts = Post.objects.filter(available=True)
+        if gender:
+            posts = posts.filter(gender=gender)
+        if division:
+            posts = posts.filter(division=division)
+        if district:
+            posts = posts.filter(district=district)
+        if upazilla:
+            posts = posts.filter(upazilla=upazilla)
+
+    
+    context = {
+        'object_list': posts, 
+        'form': form,
+        'gender': gender,
+        'division': division,
+        'district': district,
+        'upazilla': upazilla,
+        'available': available,
+    } 
+    return render(request, 'tuition/postlist.html', context)

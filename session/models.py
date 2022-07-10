@@ -160,7 +160,7 @@ class TuitionProfile(models.Model):
     )
     Choice_More_Options = (
         ('Sports_Section', 'Sports Section'),
-        ('Extra_Curricular_Activities', 'Extra Curricular Activites'),
+        ('Extra_Curricular_Activities', 'Extra Curricular Activities'),
         ('Language Learning', 'Language Learning'),
         ('Computer Learning', 'Computer Learning'),
         ('Singing_Seciton', 'Singing Section'),
@@ -177,14 +177,14 @@ class TuitionProfile(models.Model):
         ('7', '7'),
     )
     Experience = (
-        ('Null', 'No experience'),
-        ('<0.5', 'Less than 1 Year'),
-        ('1', '1 Year'),
-        ('2', '2 Years'),
-        ('3', '3 Years'),
-        ('4', '4 Years'),
-        ('5', '5 Years'),
-        ('>5', 'More than 5 years'),
+        ('No Experience', 'No Experience'),
+        ('Less than 1 Year', 'Less than 1 Year'),
+        ('1 Year', '1 Year'),
+        ('2 Years', '2 Years'),
+        ('3 Years', '3 Years'),
+        ('4 Years', '4 Years'),
+        ('5 Years', '5 Years'),
+        ('More than 5 Years', 'More than 5 Years'),
     )
 
     class_selection = (
@@ -237,17 +237,17 @@ class TuitionProfile(models.Model):
         ('Geography', 'Geography'),
         ('Studies of Islam', 'Studies of Islam'),
         ('Home Science', 'Home Science'),
-        ('All Subjects', 'All Subjects'),
+        ('All Subjects for the selected Class', 'All Subjects for the selected Class'),
     )
 
     Qualifications = (
-        ('1', 'PSC or Equivalent'),
-        ('2', 'JSC or Equivalent'),
-        ('3', 'SSC or Equivalent'),
-        ('4', 'HSC or Equivalent'),
-        ('5', 'Bachelor'),
-        ('6', '''Master's'''),
-        ('7', 'Master of Philosopy')
+        ('PSC or Equivalent', 'PSC or Equivalent'),
+        ('JSC or Equivalent', 'JSC or Equivalent'),
+        ('SSC or Equivalent', 'SSC or Equivalent'),
+        ('HSC or Equivalent', 'HSC or Equivalent'),
+        ('Bachelor', 'Bachelor'),
+        ('''Master's''', '''Master's'''),
+        ('Master of Philosopy', 'Master of Philosopy')
 
     )
 

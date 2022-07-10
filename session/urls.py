@@ -1,6 +1,6 @@
 from django.urls import path, include
 from . import views
-from .views import userProfile, login_view, userproupdate, userprofilecreate, loginuser, userpost, userapply, otherprofile, tuitionprofile, ownerprofile, logoutuser, notification, registration, change_pass, password_reset_request
+from .views import userProfile, login_view, otherpost, userproupdate, userprofilecreate, loginuser, userpost, userapply, otherprofile, tuitionprofile, ownerprofile, logoutuser, notification, registration, change_pass, password_reset_request
 from django.contrib.auth import views as auth_views
 
 app_name = 'session'
@@ -17,6 +17,7 @@ urlpatterns = [
     path('ownerprofile/', ownerprofile, name='ownerprofile'),
     path('tuitionpro/', tuitionprofile, name='tuitionpro'),
     path('userpost/', userpost, name='userpost'),
+    path('otherpost/<int:id>/', otherpost, name='otherpost'),
     path('userapply/', userapply, name='userapply'),
     # path('userpro/', UserprofileView.as_view(), name='userProfile'),
     path('userprocreate/', userprofilecreate, name='userProfilecreate'),

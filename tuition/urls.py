@@ -1,5 +1,5 @@
 from django.urls import path, include
-from .views import contact, candidate_delete, candidate_delete_confirm, candidate_accept, cancel, hire, candidate_cancel, candidate_decision_make, confirm_hiring, apply, applicants, commentdelete, commentedit, replyedit, replydelete, confirmcommentdelete, postupdate, addphoto, postcreate, likepost, addcomment, postview, filter, postview,  search, PostDeleteView, PostEditView, PostDetailView, ContactView, PostCreateView, PostListView
+from .views import contact, filter_postlist, candidate_delete, candidate_delete_confirm, candidate_accept, cancel, hire, candidate_cancel, candidate_decision_make, confirm_hiring, apply, applicants, commentdelete, commentedit, replyedit, replydelete, confirmcommentdelete, postupdate, addphoto, postcreate, likepost, addcomment, postview, filter, postview,  search, PostDeleteView, PostEditView, PostDetailView, ContactView, PostCreateView, PostListView
 from .forms import ContactFormtwo
 from .pdf import contact_pdf
 
@@ -25,7 +25,8 @@ urlpatterns = [
     path('contact/', ContactView.as_view(), name="contact"),
     # path('contact2/', ContactView.as_view(form_class=ContactFormtwo, template_name="contact2.html"), name="contact"),
     path('posts/', postview, name="posts"),
-    path('postlist/', PostListView.as_view(), name="postlist"),
+    # path('postlist/', PostListView.as_view(), name="postlist"),
+    path('postlist/', filter_postlist, name="postlist"),
     path('create/', postcreate, name="create"),
     path('update/<str:id>/', postupdate, name="postupdate"),
     # path('create/', PostCreateView.as_view(), name="create"),

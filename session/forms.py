@@ -58,20 +58,21 @@ class TuitionProfileForm(forms.ModelForm):
             }),
         }        
         labels = {
-            'salary' : 'Salary Range',
+            'salary' : 'Salary Range in BDT',
             'status' : 'Availability',
             'more_options' : 'More Options I Offer: (Max choices 3)',
             'style': 'Style of Teaching:',
             'place' : 'Places I prefer to Teach: (Max choices 3)',
-            'approach' : 'Approches I Follow: (Max choices 3)',
+            'approach' : 'Approches I used to Follow: (Max choices 3)',
             'experience' : 'Years of Experience as a Tutor',
             'qualification' : 'Latest Qualification',
             'graduated_from' : 'Graduated From / Studying At:',
             'major_subject' : 'Major Subject: (If you do not have any major leave it as General)',
-            'classes' : 'Classes I could Teach: (Max Choices 9)',
-            'subjects' : 'Subjects I could Teach (Max Choices 10):',
+            'classes' : 'Classes I Could Teach: (Max Choices 9)',
+            'subjects' : 'Subjects I Offer (Max Choices 10):',
             'current_status' : 'Educational Status:',
-            'id_certificate' : 'Upload an image of your College/University ID or Certificate from where you Graduated:'
+            'id_certificate' : 'Upload an image of your College/University ID or Certificate from where you Graduated:',
+            'medium' : 'Medium Selection'
         }
 
     def __init__(self, *args, **kwargs):

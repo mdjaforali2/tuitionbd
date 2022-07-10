@@ -212,7 +212,7 @@ def ownerprofile(request):
 
 def otherprofile(request, id):
     user = User.objects.get(id=id)
-    return render(request, 'session/otherprofile.html', {'user':user})
+    return render(request, 'session/otherprofile.html', {'user1':user})
 
 def notification(request):
     return render(request, 'session/notification.html')
@@ -260,6 +260,15 @@ def userpost(request):
     'object_list' : results,
     }
     return render(request, 'tuition/mypostlist.html', context)
+
+def otherpost(request, id):
+    user = User.objects.get(id=id)
+    results = Post.objects.filter(user=user)
+    context = {
+    'object_list' : results,
+    'user1' : user,
+    }
+    return render(request, 'tuition/otherpostlist.html', context)
 
 
 def userapply(request):

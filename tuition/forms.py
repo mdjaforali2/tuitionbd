@@ -1,9 +1,11 @@
 from cProfile import label
+from dataclasses import field
 from logging import PlaceHolder
+from xml.etree.ElementInclude import include
 from xml.etree.ElementTree import Comment
 from django.core import validators
 from django import forms
-from .models import Contact, Post, Postfile
+from .models import Contact, Post, Postfile, Filter
 from .models import Comment as Com
 
 # class ContactForm(forms.Form):
@@ -42,7 +44,10 @@ class ContactForm(forms.ModelForm):
             self.add_error('phone', 'Enter 13 digits number inclue country code [+880]')
         else:
             return value
-           
+
+
+
+
 
 class ContactFormtwo(forms.ModelForm):
     class Meta:
@@ -86,7 +91,7 @@ class PostForm(forms.ModelForm):
         self.fields['address'].label = 'House, Road No, Village/Mouza, Union / Ward No:'
         self.fields['title'].widget.attrs['placeholder'] = 'I am looking for a Math Tutor'
         self.fields['address'].widget.attrs['placeholder'] = '87/Ka, Nazrul Avenue, 2nd Kandirpar, Ward-10'
-        self.fields['gender'].label = 'Looking for a: (Gender)'
+        self.fields['gender'].label = 'Looking for a:'
         self.fields['starting_from'].label = 'Tuition Starting From:'
 
 class FileModelForm(forms.ModelForm):
@@ -102,3 +107,9 @@ class CommentForm(forms.ModelForm):
         labels = {
             'text':'Comment',
         }
+
+
+class FilterForm(forms.ModelForm):
+    class Meta:
+        model = Filter
+        fields = ['gender', 'division', 'district', 'upazilla', 'available',]

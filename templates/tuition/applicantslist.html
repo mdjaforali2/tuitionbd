@@ -3,39 +3,51 @@
 {% block body %}
 {% load humanize %}
 
-<div class="col-md-9 offset-md-1 p-3 border">
-    <h3 class="text-center">Applicants List</h3>
+<div class="text-center">
+    <h2 class="font-weight-bold mt-3">Applicants List</h2>
+    <hr>
         <table class="table">
             <thead>
             <tr>
+                {% for a in applicants %}
                 <th scope="col">Name</th>
                 <th scope="col">Gender</th>
+                <th scope="col">Age</th>
                 <th scope="col">Location</th>
-                <th scope="col">Date of Birth</th>
                 <th scope="col">Salary Expectation</th>
-                <th scope="col">Days Per Week</th>
-                <th scope="col">Education</th>
+                <th scope="col">
+                    {% if  a.tuitionprofile.current_status == 'Graduated/Passed'%}
+                    Graduated From
+                    {% else %}
+                    Studying At
+                    {% endif %}
+                    </th>
+                <th scope="col">Major</th>
                 <th scope="col">Phone</th>
                 <th scope="col">Status</th>
 
             </tr>
             </thead>
             <tbody>
-                {% for a in applicants %}
                 <th scope="row"><a href="/session/otherpro/{{a.id}}/">{{a.get_full_name}}</a></th>
-                <td>{{a.userprofile.gender}}</td>
+                <td>{{a.tuitionprofile.gender}}</td>
+                <td>{{a.userprofile.birth_date|timesince}}</td>
                 <td>{{a.tuitionprofile.district}}</td>
-                <td><span class="badge badge-secondary">{{a.userprofile.birth_date}}</span></td>
-                <td>{{a.tuitionprofile.salary}} </td>
-                <td>{{a.tuitionprofile.days_per_week}} </td>
-                <td><span class="badge badge-secondary">{{a.tuitionprofile.education}}</span></td>
+                <td>({{a.tuitionprofile.salary}}) BDT</td>
+                <td><b>{{a.tuitionprofile.graduated_from}}</b></td>
+                <td>{{a.tuitionprofile.major_subject}} </td>
                 <td>{{a.userprofile.phone}} </td>
-                <td><button class="btn"> <a href="/tuition/hire/{{id}}/{{a.tuitionprofile.id}}/">Hire</a> </button> </td>
+                {% if t == 0 %}
+                <td><button class="btn btn-dark"> <a href="/tuition/hire/{{id}}/{{a.tuitionprofile.id}}/" style="color:white">Hire</a> </button> </td>
+                {% elif t == 1 %}
+                <td><button class="btn btn-dark"> <a href="/tuition/postdetail/{{id}}/" style="color:white">Hired</a> </button> </td>
+                {% endif %}
             </tbody>
             {% endfor %}
         </table>
 </div>
 
+{{t}}
 
 
 {% endblock body %}

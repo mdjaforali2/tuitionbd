@@ -2,62 +2,154 @@
 {% block body %}
 
 <div class="container">
-    <div class="text-center">
-        <img src="{{user.userprofile.image.url}}" class="rounded-circle img-thumbnail" alt="">
-    </div>
-    <br>
-    <div class="text-center">
-       <h4> <b>{{user.first_name}} {{user.last_name}}</b> </h4>
-    </div>
-</div>
-
-<div class="container">
     <div class="row">
-        {% if user.userprofile %}
         <div class="col">
+            <div class="text-center">
+                <img src="{{user1.userprofile.image.url}}" class="rounded-circle img-thumbnail" alt="">
+            </div>
+            <br>
+            <div class="text-center">
+            <h4> <b>{{user1.first_name}} {{user1.last_name}}</b> </h4>
+                <hr>
+            </div>
+                        
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <a class="navbar-brand" href="#">More Options</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                    <div class="navbar-nav">
+                    {% comment %} <a class="nav-item nav-link active" href="/session/userpost/">My Posts <span class="sr-only">(current)</span></a> {% endcomment %}
+                    <a class="nav-item nav-link" href="/session/otherpost/{{user1.id}}/">Posts</a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+        
+
+        {% if user1.userprofile %}
+        <div class="col">
+            <br> <br> 
             <div class="col-md-12 offset-md- p-3 border">
-              <div class="text-center">
-                  <h3 class="border-bottom"> <legend> Basic Info </legend></h3>
-                  Gender: {{user.userprofile.gender}} <br>
-                  Date of Birth: {{user.userprofile.birth_date}} <br>
-                  Blood Group: {{user.userprofile.blood_group}} <br>
-                  Nationality: {{user.userprofile.nationality}} <br>
-                  Religion: {{user.userprofile.religion}} <br>
-                  Role: {{user.userprofile.role}} <br>
-                  Address: {{user.userprofile.address}}, {{user.tuitionprofile.district}} <br>
-                  Phone: {{user.userprofile.phone}} <br>
-                  Email: {{user.email_address}}
-              </div>
+                <div class="text-center">
+                    <h4 class="font-weight-bold mt-3">Basic Info</h4>
+                    <hr>
+                    <table class="table table-striped">
+                        <tbody>
+                          <tr>
+                            <td>Date of Birth</td>
+                            <td><b>{{user1.userprofile.birth_date}}</b></td>
+                          </tr>
+                          <tr>
+                            <td>Blood Group</td>
+                            <td><b>{{user1.userprofile.blood_group}} (O Positive)</b></td>
+                          </tr>
+                          <tr>
+                            <td>Nationality</td>
+                            <td><b>{{user1.userprofile.nationality}}</b></td>
+                          </tr>
+                          <tr>
+                            <td>Religion</td>
+                            <td><b>{{user1.userprofile.religion}}</b></td>
+                          </tr>
+                          <tr>
+                            <td>Phone</td>
+                            <td><b>{{user1.userprofile.phone}}</b></td>
+                          </tr>
+                          <tr>
+                            <td>Email</td>
+                            <td><b>{{user1.email}}</b></td>
+                          </tr>
+                        </tbody>
+                      </table>
+                </div>
             </div>
         </div>
         {% endif %}
-
-
-        {% if user.tuitionprofile %}
+    </div>
+    <br>
+    <div class="row">
+        {% if user1.tuitionprofile %}
         <div class="col">
             <div class="col-md-12 offset-md- p-3 border">
-              <div class="text-center">
-                <h3 class="border-bottom"> <legend> Tution Related Info </legend></h3>
-                Style: {{user.tuitionprofile.style}} <br>
-                Place: {{user.tuitionprofile.place}} <br>
-                Approach: {{user.tuitionprofile.approach}} <br>
-                Approach: {{user.tuitionprofile.medium}} <br>
-                Subjects: {% for s in user.tuitionprofile.subject.all %} {{s}}
-                          {% comment %} {% if not forloop.last %},{% endif %} {% endcomment %}
-                          {% endfor %} <br>
-                Class In: {% for s in user.tuitionprofile.class_in.all %} {{s}}
-                          {% comment %} {% if not forloop.last %},{% endif %} {% endcomment %}
-                          {% endfor %} <br>
-                Salary: {{user.tuitionprofile.salary}} <br>
-                Days Per Week: {{user.tuitionprofile.days_per_week}} <br>
-                Education: {{user.tuitionprofile.education}} <br>
-                Status: {{user.tuitionprofile.status}} <br>
-            </div>
-          </div>
-        </div>
-        {% endif %} 
-    </div>
-</div>
-<br>
+                <div class="text-center">
+                    <h4 class="font-weight-bold mt-3">More Info as a Tutor</h4>
+                    <hr>
 
+                    <table class="table table-striped">
+                        <tbody>
+                        <tr>
+                            <td>Gender</td>
+                            <td><b>{{user1.tuitionprofile.gender}}</b></td>
+                        </tr>
+                        <tr>
+                            <td>Address</td>
+                            <td><b>{{user1.tuitionprofile.upazilla}}, {{user1.tuitionprofile.district}}</b></td>
+                        </tr>
+                        <tr>
+                            <td>Style of Teaching</td>
+                            <td><b>{{user1.tuitionprofile.style}}</b></td>
+                        </tr>
+                        <tr>
+                            <td>Preferable Places</td>
+                            <td><b>{{user1.tuitionprofile.place}}</b></td>
+                        </tr>
+                        <tr>
+                            <td>Approches</td>
+                            <td><b>{{user1.tuitionprofile.approach}}</b></td>
+                        </tr>
+                        <tr>
+                            <td>Preferred Medium</td>
+                            <td><b>{{user1.tuitionprofile.medium}}</b></td>
+                        </tr>
+                        <tr>
+                            <td>Classes</td>
+                            <td><b>{{user1.tuitionprofile.classes}}</b></td>
+                        </tr>
+                        <tr>
+                            <td>Subjects</td>
+                            <td><b>{{user1.tuitionprofile.subjects}}</b></td>
+                        </tr>
+                        <tr>
+                            <td>More Offerings</td>
+                            <td><b>{{user1.tuitionprofile.more_options}}</b></td>
+                        </tr>
+                        <tr>
+                            <td>Years of Experience as a Tutor</td>
+                            <td><b>{{user1.tuitionprofile.experience}}</b></td>
+                        </tr>
+                        <tr>
+                            <td>Salary Range</td>
+                            <td><b>({{user1.tuitionprofile.salary}})BDT</b></td>
+                        </tr>
+                        <tr>
+                            <td>Days Per Week</td>
+                            <td><b>{{user1.tuitionprofile.days_per_week}} Days</b></td>
+                        </tr>
+                        <tr>
+                            <td>Latest Qualification</td>
+                            <td><b>{{user1.tuitionprofile.qualification}}</b></td>
+                        </tr>
+                        <tr>
+                            <td>Current Educational Status:</td>
+                            <td><b>{{user1.tuitionprofile.current_status}}</b></td>
+                        </tr>
+                        <tr>
+                            <td>Graduated From / Studying At:</td>
+                            <td><b>{{user1.tuitionprofile.graduated_from}}</b></td>
+                        </tr>
+                        <tr>
+                            <td>Major Subject</td>
+                            <td><b>{{user1.tuitionprofile.major_subject}}</b></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>    
 {% endblock body %}

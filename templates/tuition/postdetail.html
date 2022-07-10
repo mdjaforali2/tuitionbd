@@ -6,110 +6,148 @@
 
 
 <div class="col-md-6 offset-md-3 p-3 border">
-    <h1 class="text-center"> P1{{object.id}} {{object.proper_title}}</h1> <br>
-    {% comment %} <div class="col-md-6 offset-md-3 p-3 border center"> {% endcomment %}
-    <div class="container">
-        <div class="row">
-            <div class="col">
-                <h2> {{msg}} </h2> 
-                Post created by: <b>{{object.user.username}}</b> <br>
-                Created at: {{object.created_at|naturaltime}} <br> 
-                Subjects interested in teaching: <b>{{object.get_subject_list}}</b><br>
-                Classes wishes to teach: <b>{{object.get_class_list}}</b> <br>
-                Category: <b>{{object.category}}</b> <br>
-                {% comment %} Language Known: {{object.medium}} <br> {% endcomment %}
-                Salary Expectation: <b>{{object.salary}}BDT</b> <br>
-                Availablity: {% if object.available %} <b>Yes</b> {% else %} No{% endif %}<br>
-                Contact: <b>{{object.email}}</b> <br>
-                District: <b>{{object.district}}</b> <br>
-            </div>
-            <div class="col">
-                <img src="{{object.image.url}}" alt="" style="width:300px, height:300px" class="rounded-circle img-thumbnail"> <br> 
 
-                 {% comment %} <div class="float-right">
-                <div class="fb-like" data-href="http://127.0.0.1:8000/tuition/postdetail/{{object.id}}/" data-width="" data-layout="box_count" data-action="recommend" data-size="large" data-share="true"></div>
-                 </div> {% endcomment %}
-            </div>
-        </div>
-            <p>Details: {{object.details}}</p>
-
-                {% comment %} <div class>
-                <div class="fb-comments" data-href="http://127.0.0.1:8000/tuition/postdetail/{{object.id}}/" data-width="" data-numposts="10"></div>
-                </div> {% endcomment %}
+    <div class="text-center">
+        <h2 class="font-weight-bold mt-3">P{{object.id}} {{object.proper_title}} <img src="{{object.image.url}}" class="rounded-circle img-thumbnail" style="width:150px" alt=""></h2> 
     </div>
-        
-        {% if request.user != object.user %}
-            {% for candidate in selected_candidate%}
-                {% if count == 1 and t_c == 1 %}
-                    {% if request.user == candidate.user %}
-                        <div class="col text-center">
-                            <button class="btn">You are already hired for this Tuition</button>
-                        </div>
+
+
+
+    <hr>
+    <div class="text-center">
+        <table class="table table-striped">
+            <tbody>
+            <tr>
+                <td>Posted By</td>
+                <td><b>
+                    {% if request.user == object.user %}
+                    <a href="/session/ownerprofile/"> You </a>
                     {% else %}
-                        <div class="col text-center">
-                            <button class="btn">This post is no more available</a></button>
-                        </div>
-                    {% endif %}
-                {% elif count == 1 and t_c == 0 %}
-                    <div class="col text-center">
-                        <button class="btn">You are selected<br> <a href="/tuition/candidate_decission_make/{{object.id}}/{{candidate.id}}/">Make a Decission</a></button>
-                    </div>
-                {% endif %}
-            {% endfor %}    
-            
-        
-            {%if count == 0 %}                
-                {% if request.user in applied_applicants %}
-                    <div class="col text-center">
-                        <button class="btn"> <a href="/tuition/cancel/{{object.id}}/">Cancel</a>
-                    </div>
-                {% else %}
-                    {% comment %} {% for tuitionprofile in tuitionprofiles %} {% endcomment %}
-                        {% if tp == 1%}
-                            <div class="col text-center">
-                                <button class="btn"> <a href="/tuition/apply/{{object.id}}/">Apply</a>
-                            </div>
-                        {%elif tp == 0%}
-                            {% if up == 1%}
+                    <a href="/session/otherpro/{{object.user.id}}/"> {% if object.user.get_full_name %}{{object.user.get_full_name}} {% else %}{{object.user.username}} {% endif %} </a>
+                    {% endif %} 
+                    {{object.created_at|naturaltime}}</b></td>
+            </tr>   
+            <tr>
+                <td>Starting Form</td>
+                <td><b>{{object.starting_from}}</b></td>
+            </tr>
+            <tr>
+                <td>Looking For</td>
+                <td><b>{{object.gender}}</b></td>
+            </tr>
+            <tr>
+                <td>Address</td>
+                <td><b>{{object.address}}, {{object.upazilla}}, {{object.district}}</b></td>
+            </tr>
+            <tr>
+                <td>Students</td>
+                <td><b>{{object.student_count}}</b></td>
+            </tr>
+            <tr>
+                <td>Medium</td>
+                <td><b>{{object.medium}}</b></td>
+            </tr>
+            <tr>
+                <td>Classes</td>
+                <td><b>{{object.classes}}</b></td>
+            </tr>
+            <tr>
+                <td>Subjects</td>
+                <td><b>{{object.subjects}}</b></td>
+            </tr>
+            <tr>
+                <td>Budget</td>
+                <td><b>{{object.salary}} BDT</b></td>
+            </tr>
+            <tr>
+                <td>Days Per Week</td>
+                <td><b>{{object.days_per_week}} Days</b></td>
+            </tr>
+            <tr>
+                <td>Details</td>
+                <td><b>{{object.details}}</b></td>
+            </tr>
+            <tr>
+                <td>Application Status</td>
+                <td><b>
+                    {% if request.user != object.user %}
+                    {% for candidate in selected_candidate%}
+                        {% if count == 1 and t_c == 1 %}
+                            {% if request.user == candidate.user %}
                                 <div class="col text-center">
-                                    <button class="btn"> <a href="/session/tuitionpro/">Create TuitionProfile</a> <br>To Apply </button>
+                                    <button class="btn btn-primary">You are already hired for this Tuition</button>
                                 </div>
-                            {% elif up == 0 %}
+                            {% else %}
                                 <div class="col text-center">
-                                    <button class="btn"> <a href="/session/userprocreate/">Create Profile</a></button>
+                                    <button class="btn">This post is no more available</a></button>
                                 </div>
                             {% endif %}
-                        {% endif %}  
-                    {% comment %} {% endfor %}       {% endcomment %}
-                {% endif %}
-            {% endif%}
-
-{{userprofiles}}
+                        {% elif count == 1 and t_c == 0 %}
+                            <div class="col text-center">
+                                <button class="btn">You are selected<br> <a href="/tuition/candidate_decission_make/{{object.id}}/{{candidate.id}}/">Make a Decission</a></button>
+                            </div>
+                        {% endif %}
+                    {% endfor %}    
+                    
+                
+                    {%if count == 0 %}                
+                        {% if request.user in applied_applicants %}
+                            <div class="col text-center">
+                                <button class="btn btn-danger"> <a href="/tuition/cancel/{{object.id}}/" style="color: white">Cancel</a>
+                            </div>
+                        {% else %}
+                            {% comment %} {% for tuitionprofile in tuitionprofiles %} {% endcomment %}
+                                {% if tp == 1%}
+                                    <div class="col text-center">
+                                        <button class="btn btn-success"> <a href="/tuition/apply/{{object.id}}/" style="color: white">Apply</a>
+                                    </div>
+                                {%elif tp == 0%}
+                                    {% if up == 1%}
+                                        <div class="col text-center">
+                                            <button class="btn"> <a href="/session/tuitionpro/">Create TuitionProfile</a> <br>To Apply </button>
+                                        </div>
+                                    {% elif up == 0 %}
+                                        <div class="col text-center">
+                                            <button class="btn"> <a href="/session/userprocreate/">Create Profile</a></button>
+                                        </div>
+                                    {% endif %}
+                                {% endif %}  
+                            {% comment %} {% endfor %}       {% endcomment %}
+                        {% endif %}
+                    {% endif%}
         
-        {% else %}
-            {% for candidate in selected_candidate%}
-                {% if count == 1 and t_c == 1 %}
-                    <div class="text-center">
-                        <button class="btn">You already hired <a href="/session/otherpro/{{candidate.user.id}}/">{{candidate.user.first_name}} {{candidate.user.last_name}}</a> for this Tuition</button>
-                    </div>
-                {% elif count == 1 and t_c == 0%}
-                    <div class="text-center">
-                        <button class="btn">Candidate's Decission Still Pending</a></button>
-                    </div>
-                    <div class="text-center">
-                        <button class="btn"><a href="/tuition/candidate_delete/{{object.id}}/{{candidate.id}}/">Cancel Hiring Him/Her{{object.candidate.user.first_name}} {{object.candidate.user.last_name}}</a></button>
-                    </div>
+        {{userprofiles}}
+                
+                {% else %}
+                    {% for candidate in selected_candidate%}
+                        {% if count == 1 and t_c == 1 %}
+                            <div class="text-center">
+                                <button class="btn">You already hired <a href="/session/otherpro/{{candidate.user.id}}/">{{candidate.user.first_name}} {{candidate.user.last_name}}</a> for this Tuition</button>
+                            </div>
+                        {% elif count == 1 and t_c == 0%}
+                            <div class="text-center">
+                                <button class="btn">Candidate's Decission Still Pending</a></button>
+                            </div>
+                            <div class="text-center">
+                                <button class="btn"><a href="/tuition/candidate_delete/{{object.id}}/{{candidate.id}}/">Cancel Hiring Him/Her{{object.candidate.user.first_name}} {{object.candidate.user.last_name}}</a></button>
+                            </div>
+                            {% endif %}
+                    {% endfor %}
+        
+                    {% if count == 0 %}
+                        <div class="text-center">
+                            <button class="btn btn-primary"> <a href="/tuition/applicants/{{object.id}}/" style="color: white">Applicants List</a> </button>
+                        </div>
                     {% endif %}
-            {% endfor %}
-
-            {% if count == 0 %}
-                <div class="text-center">
-                    <button class="btn"> <a href="/tuition/applicants/{{object.id}}/">Applicants List</a> </button>
-                </div>
-            {% endif %}
-        {% endif %}
-    
+                {% endif %}
+                </b></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
+
+
 <div class="col-md-6 offset-md-3 p-3 border">
     <form action="/tuition/likepost/{{object.id}}/" method="post">
     <div class="row">
@@ -125,9 +163,11 @@
 
         <div class="text-center">
             {% if request.user == object.user %}
-                <a href="/tuition/addphoto/{{object.id}}/">Add Photo </a> 
-                <a href="/tuition/update/{{object.id}}/">Edit </a> 
-                <a href="/tuition/delete/{{object.id}}/">Delete </a>
+                {% comment %} <a href="/tuition/addphoto/{{object.id}}/">Add Photo </a>  {% endcomment %}
+                {% comment %} <a href="/tuition/update/{{object.id}}/">Edit </a> 
+                <a href="/tuition/delete/{{object.id}}/">Delete </a> {% endcomment %}
+                <button type="submit" class="btn btn-info"><a href="/tuition/update/{{object.id}}/" style="color: white">Edit</a></button>
+                <button type="submit" class="btn btn-danger"><a href="/tuition/delete/{{object.id}}/" style="color: white">Delete</a></button>
             {% endif %}
             </div>
 

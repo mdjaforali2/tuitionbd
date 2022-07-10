@@ -3,41 +3,46 @@
 {% block body %}
 {% load humanize %}
 
-<div class="container">
-    <div class="row">
-        <div class="col">
-            <div class="container float-left">
-                <h4 class="text-center">My Post List</h4>
-                <table class="table">
-                    <thead>
-                    <tr>
-                        <th scope="col">PostID</th>
-                        <th scope="col">Title</th>
-                        <th scope="col">Location</th>
-                        <th scope="col">Salary</th>
-                        <th scope="col">Post Creator</th>
-                        <th scope="col">Created At</th>
-                        <th scope="col">Status</th>
-                        <th scope="col"></th>
+<div class="col-md-6 offset-md-3 p-3 border">
+    <div class="text-center">
+        <h2 class="font-weight-bold mt-3">My Posts</h2>
+        <hr>
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">PostID</th>
+                <th scope="col">Title</th>
+                <th scope="col">Location</th>
+                <th scope="col">Salary</th>
+                <th scope="col">Edit</th>
+                <th scope="col">Delete</th>
+                <th scope="col">Status</th>
+                <th scope="col"></th>
 
-                    </tr>
-                    </thead>
-                    <tbody>
-                        {% for p in object_list %}
-                        <th scope="row">{% if request.user.is_authenticated %}<a href="/tuition/postdetail/{{p.id}}">P1{{p.id}}</a>{% endif %}</th>
-                        <td>{{p.title}}</td>
-                        <td>{{p.district}}</td>
-                        <td>{{p.salary}} </td>
-                        <td><a href="/session/otherpro/{{p.user.username}}/"> {% if p.user.get_full_name %}{{p.user.get_full_name}} {% else %}{{p.user.username}} {% endif %} </a></td>
-                        <td><span class="badge badge-secondary">{{p.created_at}}</span></td>
-                        <td>{% if p.available%}Hiring{% else %}{{p.avialable}}Hired{% endif %} </td>
-                        <td>{% if request.user.is_authenticated %}<a href="/tuition/postdetail/{{p.id}}">Details</a>{% endif %} </td>
-                    </tbody>
-                    {% endfor %}
-                </table>
-            </div>
-        </div>
-        
+            </tr>
+            </thead>
+            <tbody>
+                {% for p in object_list %}
+                <th scope="row">{% if request.user.is_authenticated %}<a href="/tuition/postdetail/{{p.id}}">P{{p.id}}</a>{% endif %}</th>
+                <td><b>{{p.title}}</b></td>
+                <td>{{p.district}}</td>
+                <td>{{p.salary}} </td>
+                <td>
+                    <button type="submit" class="btn btn-info"><a href="/tuition/update/{{p.id}}/" style="color: white">Edit</a></button>
+                </td>
+                <td>
+                    <button type="submit" class="btn btn-danger"><a href="/tuition/delete/{{p.id}}/" style="color: white">Delete</a></button> 
+                </td>
+                <td> {% if p.available%} <button type="submit" class="btn btn-success"> <a href="/tuition/postdetail/{{p.id}}" style="color: white">Hiring</a></button>
+                    {% else %} <button type="submit" class="btn btn-secondary"> <a href="/tuition/postdetail/{{p.id}}" style="color: white">Hired</a></button>
+                    {% endif %} </td>
+                <td>{% if request.user.is_authenticated %}<a href="/tuition/postdetail/{{p.id}}">Details</a>{% endif %} </td>
+            </tbody>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+
 
        
 </div>
